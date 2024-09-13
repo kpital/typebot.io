@@ -182,7 +182,6 @@ const LeftElements = ({
           />
           )
         </HStack>
-
         {currentUserMode === 'write' && (
           <HStack>
             <Tooltip
@@ -331,7 +330,8 @@ const TypebotNav = ({
       >
         {t('editor.header.flowButton.label')}
       </Button>
-      <Button
+      {/* Kpital */}
+      {/* <Button
         as={Link}
         href={`/typebots/${typebotId}/theme`}
         colorScheme={router.pathname.endsWith('theme') ? 'blue' : 'gray'}
@@ -339,8 +339,9 @@ const TypebotNav = ({
         size="sm"
       >
         {t('editor.header.themeButton.label')}
-      </Button>
-      <Button
+      </Button> */}
+      {/* Kpital */}
+      {/* <Button
         as={Link}
         href={`/typebots/${typebotId}/settings`}
         colorScheme={router.pathname.endsWith('settings') ? 'blue' : 'gray'}
@@ -348,8 +349,9 @@ const TypebotNav = ({
         size="sm"
       >
         {t('editor.header.settingsButton.label')}
-      </Button>
-      <Button
+      </Button> */}
+      {/* Kpital */}
+      {/* <Button
         as={Link}
         href={`/typebots/${typebotId}/share`}
         colorScheme={router.pathname.endsWith('share') ? 'blue' : 'gray'}
@@ -357,7 +359,7 @@ const TypebotNav = ({
         size="sm"
       >
         {t('share.button.label')}
-      </Button>
+      </Button> */}
       {isResultsDisplayed && (
         <Button
           as={Link}
