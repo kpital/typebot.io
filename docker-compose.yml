@@ -18,7 +18,7 @@ services:
       context: .
       args:
         SCOPE: builder
-    image: typebot-builder-kpital:v1.0
+    image: typebot-builder-kpital:latest
     restart: always
     depends_on:
       - typebot-db
