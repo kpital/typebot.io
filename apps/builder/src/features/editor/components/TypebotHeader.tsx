@@ -12,7 +12,7 @@ import {
   chakra,
 } from '@chakra-ui/react'
 import {
-  BuoyIcon,
+  // BuoyIcon,
   ChevronLeftIcon,
   CopyIcon,
   PlayIcon,
@@ -26,7 +26,7 @@ import { EditableTypebotName } from './EditableTypebotName'
 import Link from 'next/link'
 import { EditableEmojiOrImageIcon } from '@/components/EditableEmojiOrImageIcon'
 import { useDebouncedCallback } from 'use-debounce'
-import { ShareTypebotButton } from '@/features/share/components/ShareTypebotButton'
+// import { ShareTypebotButton } from '@/features/share/components/ShareTypebotButton'
 import { PublishButton } from '@/features/publish/components/PublishButton'
 import { headerHeight } from '../constants'
 import { RightPanel, useEditor } from '../providers/EditorProvider'
@@ -84,7 +84,7 @@ export const TypebotHeader = () => {
 }
 
 const LeftElements = ({
-  onHelpClick,
+  // onHelpClick,
   ...props
 }: StackProps & { onHelpClick: () => void }) => {
   const { t } = useTranslate()
@@ -223,7 +223,8 @@ const LeftElements = ({
             </Tooltip>
           </HStack>
         )}
-        <Button
+        {/* Kpital */}
+        {/* <Button
           leftIcon={<BuoyIcon />}
           onClick={onHelpClick}
           size="sm"
@@ -232,7 +233,7 @@ const LeftElements = ({
           <chakra.span display={{ base: 'none', xl: 'inline' }}>
             {t('editor.header.helpButton.label')}
           </chakra.span>
-        </Button>
+        </Button> */}
       </HStack>
       {isSavingLoading && (
         <HStack>
@@ -275,7 +276,7 @@ const RightElements = ({
         isResultsDisplayed={isResultsDisplayed}
       />
       <Flex pos="relative">
-        <ShareTypebotButton isLoading={isNotDefined(typebot)} />
+        {/* <ShareTypebotButton isLoading={isNotDefined(typebot)} /> */}
       </Flex>
       {router.pathname.includes('/edit') &&
         rightPanel !== RightPanel.PREVIEW && (
@@ -309,19 +310,20 @@ const RightElements = ({
 }
 
 const TypebotNav = ({
-  typebotId,
-  isResultsDisplayed,
+  // typebotId,
+  // isResultsDisplayed,
   ...stackProps
 }: {
   typebotId?: string
   isResultsDisplayed: boolean
 } & StackProps) => {
-  const { t } = useTranslate()
-  const router = useRouter()
+  // const { t } = useTranslate()
+  // const router = useRouter()
 
   return (
     <HStack {...stackProps}>
-      <Button
+      {/* Kpital */}
+      {/* <Button
         as={Link}
         href={`/typebots/${typebotId}/edit`}
         colorScheme={router.pathname.includes('/edit') ? 'blue' : 'gray'}
@@ -329,8 +331,8 @@ const TypebotNav = ({
         size="sm"
       >
         {t('editor.header.flowButton.label')}
-      </Button>
-      {/* Kpital */}
+      </Button> */}
+
       {/* <Button
         as={Link}
         href={`/typebots/${typebotId}/theme`}
@@ -360,7 +362,7 @@ const TypebotNav = ({
       >
         {t('share.button.label')}
       </Button> */}
-      {isResultsDisplayed && (
+      {/* {isResultsDisplayed && (
         <Button
           as={Link}
           href={`/typebots/${typebotId}/results`}
@@ -370,7 +372,7 @@ const TypebotNav = ({
         >
           {t('editor.header.resultsButton.label')}
         </Button>
-      )}
+      )} */}
     </HStack>
   )
 }
