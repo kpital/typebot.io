@@ -9,7 +9,7 @@ export enum InputBlockType {
   PHONE = 'phone number input',
   CHOICE = 'choice input',
   PICTURE_CHOICE = 'picture choice input',
-  PAYMENT = 'payment input',
+  // PAYMENT = 'payment input', // Kpital hide blocks
   RATING = 'rating input',
   FILE = 'file input',
 }

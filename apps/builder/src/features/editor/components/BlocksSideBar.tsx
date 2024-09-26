@@ -30,6 +30,13 @@ import { forgedBlocks } from '@typebot.io/forge-repository/definitions'
 // Integration blocks migrated to forged blocks
 const legacyIntegrationBlocks = [IntegrationBlockType.OPEN_AI]
 
+// Integration blocks visible in the sidebar. Kpital
+const IntegrationBlockTypeVisible = [
+  IntegrationBlockType.OPEN_AI,
+  IntegrationBlockType.WEBHOOK,
+  IntegrationBlockType.EMAIL,
+]
+
 export const BlocksSideBar = () => {
   const { t } = useTranslate()
   const { setDraggedBlockType, draggedBlockType } = useBlockDnd()
@@ -226,7 +233,7 @@ export const BlocksSideBar = () => {
             {t('editor.sidebarBlocks.blockType.integrations.heading')}
           </Text>
           <SimpleGrid columns={2} spacing="3">
-            {Object.values(IntegrationBlockType)
+            {Object.values(IntegrationBlockTypeVisible)
               .filter((type) =>
                 type.toLowerCase().includes(searchInput.toLowerCase())
               )

@@ -15,16 +15,16 @@ import { groqBlock } from '@typebot.io/groq-block'
 
 export const forgedBlocks = {
   [openAIBlock.id]: openAIBlock,
-  [calComBlock.id]: calComBlock,
-  [chatNodeBlock.id]: chatNodeBlock,
-  [qrCodeBlock.id]: qrCodeBlock,
-  [difyAiBlock.id]: difyAiBlock,
-  [mistralBlock.id]: mistralBlock,
-  [elevenlabsBlock.id]: elevenlabsBlock,
-  [anthropicBlock.id]: anthropicBlock,
-  [togetherAiBlock.id]: togetherAiBlock,
-  [openRouterBlock.id]: openRouterBlock,
-  [nocodbBlock.id]: nocodbBlock,
-  [segmentBlock.id]: segmentBlock,
-  [groqBlock.id]: groqBlock,
+  // [calComBlock.id]: calComBlock, // Kpital hide blocks
+  // [chatNodeBlock.id]: chatNodeBlock,
+  // [qrCodeBlock.id]: qrCodeBlock,
+  // [difyAiBlock.id]: difyAiBlock,
+  // [mistralBlock.id]: mistralBlock,
+  // [elevenlabsBlock.id]: elevenlabsBlock,
+  // [anthropicBlock.id]: anthropicBlock,
+  // [togetherAiBlock.id]: togetherAiBlock,
+  // [openRouterBlock.id]: openRouterBlock,
+  // [nocodbBlock.id]: nocodbBlock,
+  // [segmentBlock.id]: segmentBlock,
+  // [groqBlock.id]: groqBlock,
 }
