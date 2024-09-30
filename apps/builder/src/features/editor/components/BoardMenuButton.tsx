@@ -11,11 +11,11 @@ import {
 } from '@chakra-ui/react'
 import assert from 'assert'
 import {
-  BookIcon,
+  // BookIcon, // Kpital
   BracesIcon,
   DownloadIcon,
   MoreVerticalIcon,
-  SettingsIcon,
+  // SettingsIcon, // Kpital
 } from '@/components/icons'
 import { useTypebot } from '../providers/TypebotProvider'
 import React, { useState } from 'react'
@@ -27,7 +27,8 @@ import { RightPanel, useEditor } from '../providers/EditorProvider'
 export const BoardMenuButton = (props: StackProps) => {
   const { typebot, currentUserMode } = useTypebot()
   const [isDownloading, setIsDownloading] = useState(false)
-  const { isOpen, onOpen, onClose } = useDisclosure()
+  // const { isOpen, onOpen, onClose } = useDisclosure() // Kpital
+  const { isOpen, onClose } = useDisclosure()
   const { t } = useTranslate()
   const { setRightPanel } = useEditor()
 
@@ -48,8 +49,9 @@ export const BoardMenuButton = (props: StackProps) => {
     setIsDownloading(false)
   }
 
-  const redirectToDocumentation = () =>
-    window.open('https://docs.typebot.io/editor/graph', '_blank')
+  // Kpital
+  // const redirectToDocumentation = () =>
+  //   window.open('https://docs.typebot.io/editor/graph', '_blank')
 
   return (
     <HStack rounded="md" spacing="4" {...props}>
@@ -71,12 +73,14 @@ export const BoardMenuButton = (props: StackProps) => {
           bgColor={useColorModeValue('white', undefined)}
         />
         <MenuList>
-          <MenuItem icon={<BookIcon />} onClick={redirectToDocumentation}>
+          {/* Kpital */}
+          {/* <MenuItem icon={<BookIcon />} onClick={redirectToDocumentation}>
             {t('editor.graph.menu.documentationItem.label')}
-          </MenuItem>
-          <MenuItem icon={<SettingsIcon />} onClick={onOpen}>
+          </MenuItem> */}
+          {/* Kpital */}
+          {/* <MenuItem icon={<SettingsIcon />} onClick={onOpen}>
             {t('editor.graph.menu.editorSettingsItem.label')}
-          </MenuItem>
+          </MenuItem> */}
           {currentUserMode !== 'guest' ? (
             <MenuItem icon={<DownloadIcon />} onClick={downloadFlow}>
               {t('editor.graph.menu.exportFlowItem.label')}

@@ -30,6 +30,28 @@ import { forgedBlocks } from '@typebot.io/forge-repository/definitions'
 // Integration blocks migrated to forged blocks
 const legacyIntegrationBlocks = [IntegrationBlockType.OPEN_AI]
 
+// Input blocks visible in the sidebar. Kpital
+const InputBlockTypeVisible = [
+  InputBlockType.TEXT,
+  InputBlockType.NUMBER,
+  InputBlockType.EMAIL,
+  InputBlockType.URL,
+  InputBlockType.DATE,
+  InputBlockType.PHONE,
+  InputBlockType.CHOICE,
+  InputBlockType.PICTURE_CHOICE,
+  InputBlockType.FILE,
+]
+
+// Integration blocks visible in the sidebar. Kpital
+const IntegrationBlockTypeVisible = [
+  IntegrationBlockType.OPEN_AI,
+  IntegrationBlockType.WEBHOOK,
+  IntegrationBlockType.EMAIL,
+]
+
+const forgedBlocksVisible = [forgedBlocks.openai]
+
 export const BlocksSideBar = () => {
   const { t } = useTranslate()
   const { setDraggedBlockType, draggedBlockType } = useBlockDnd()
@@ -92,7 +114,7 @@ export const BlocksSideBar = () => {
   }) => {
     setSearchInput(event.target.value)
   }
-  const blocksArray = Object.values(forgedBlocks)
+  const blocksArray = Object.values(forgedBlocksVisible)
 
   const filteredForgedBlockIds = blocksArray
     .filter((block) => {
@@ -188,7 +210,7 @@ export const BlocksSideBar = () => {
             {t('editor.sidebarBlocks.blockType.inputs.heading')}
           </Text>
           <SimpleGrid columns={2} spacing="3">
-            {Object.values(InputBlockType)
+            {Object.values(InputBlockTypeVisible)
               .filter((type) =>
                 type.toLowerCase().includes(searchInput.toLowerCase())
               )
@@ -226,7 +248,7 @@ export const BlocksSideBar = () => {
             {t('editor.sidebarBlocks.blockType.integrations.heading')}
           </Text>
           <SimpleGrid columns={2} spacing="3">
-            {Object.values(IntegrationBlockType)
+            {Object.values(IntegrationBlockTypeVisible)
               .filter((type) =>
                 type.toLowerCase().includes(searchInput.toLowerCase())
               )
