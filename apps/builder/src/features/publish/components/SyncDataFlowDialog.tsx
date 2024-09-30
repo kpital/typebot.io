@@ -25,6 +25,11 @@ export type SyncDataFlowProps = {
   onClose: () => void
 }
 
+type TokenResponse = {
+  access: string
+  refresh: string
+}
+
 /**
  * Esta función es responsable de obtener un token de autenticación utilizando
  * las credenciales del usuario y la URL proporcionada. Envía una solicitud POST con
@@ -42,7 +47,7 @@ const getToken = async (
   url: string
 ): Promise<string | null> => {
   try {
-    const respuesta = await fetch(`${url}`, {
+    const response = await fetch(`${url}`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -53,12 +58,12 @@ const getToken = async (
       }),
     })
 
-    if (!respuesta.ok) {
+    if (!response.ok) {
       throw new Error('Error al obtener el token')
     }
 
-    const datos = await respuesta.json()
-    return datos.token
+    const data: TokenResponse = await response.json()
+    return data.access
   } catch (error) {
     console.error('Error al obtener el token:', error)
     return null
@@ -77,6 +82,10 @@ export const SyncDataFlowDialog = ({ isOpen, onClose }: SyncDataFlowProps) => {
     password: '',
   })
 
+  const [isLoading, setIsLoading] = useState(false)
+  const [token, setToken] = useState<string | null>(null)
+  const [dataFlow, setDataFlow] = useState<string | null>(null)
+
   // Manejador de cambios en los inputs
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target
@@ -93,8 +102,9 @@ export const SyncDataFlowDialog = ({ isOpen, onClose }: SyncDataFlowProps) => {
    * para enviar los datos del flujo junto con el token.
    */
   const handleSubmit = async () => {
+    setIsLoading(true)
     assert(typebot)
-    const dataFlow = JSON.stringify(typebot)
+    setDataFlow(JSON.stringify(typebot))
 
     const token = await getToken(
       session?.user?.email ?? '',
@@ -102,9 +112,25 @@ export const SyncDataFlowDialog = ({ isOpen, onClose }: SyncDataFlowProps) => {
       inputs.url
     )
     if (token) {
-      // Aquí puedes manejar la lógica para enviar dataFlow con el token
-      console.log('Token obtenido:', token)
-      console.log('Flujo de datos:', dataFlow)
+      setToken(token)
+      await updateDataFlow()
+    }
+    setIsLoading(false)
+  }
+
+  const updateDataFlow = async () => {
+    const response = await fetch(`${inputs.url}/api/typebots/`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
+      body: dataFlow,
+    })
+    if (response.ok) {
+      console.log('DataFlow updated successfully')
+    } else {
+      console.error('Failed to update DataFlow')
     }
   }
 
@@ -151,7 +177,12 @@ export const SyncDataFlowDialog = ({ isOpen, onClose }: SyncDataFlowProps) => {
             </FormControl>
           </ModalBody>
           <ModalFooter>
-            <Button colorScheme="blue" mr={3} onClick={handleSubmit}>
+            <Button
+              colorScheme="blue"
+              mr={3}
+              onClick={handleSubmit}
+              isLoading={isLoading}
+            >
               {t('SyncDataFlowDialog.submitButton.label')}
             </Button>
           </ModalFooter>
