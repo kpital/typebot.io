@@ -33,7 +33,7 @@ import { InputBlockType } from '@typebot.io/schemas/features/blocks/inputs/const
 import { ConfirmModal } from '@/components/ConfirmModal'
 import { TextLink } from '@/components/TextLink'
 import { useTimeSince } from '@/hooks/useTimeSince'
-import { SyncDataFlowDialog } from '@/features/publish/components/SyncDataFlowDialog'
+import { SyncDataFlowDialog } from '@/features/kpital/components/SyncDataFlowDialog'
 
 type Props = ButtonProps & {
   isMoreMenuDisabled?: boolean
