@@ -17,6 +17,7 @@ import {
   CloudOffIcon,
   LockedIcon,
   UnlockedIcon,
+  RefreshIcon,
 } from '@/components/icons'
 import { useTypebot } from '@/features/editor/providers/TypebotProvider'
 import { useWorkspace } from '@/features/workspace/WorkspaceProvider'
@@ -32,6 +33,7 @@ import { InputBlockType } from '@typebot.io/schemas/features/blocks/inputs/const
 import { ConfirmModal } from '@/components/ConfirmModal'
 import { TextLink } from '@/components/TextLink'
 import { useTimeSince } from '@/hooks/useTimeSince'
+import { SyncDataFlowDialog } from '@/features/kpital/components/SyncDataFlowDialog'
 
 type Props = ButtonProps & {
   isMoreMenuDisabled?: boolean
@@ -48,6 +50,11 @@ export const PublishButton = ({
     isOpen: isNewEngineWarningOpen,
     onOpen: onNewEngineWarningOpen,
     onClose: onNewEngineWarningClose,
+  } = useDisclosure()
+  const {
+    isOpen: isSyncDataFlowDialogOpen,
+    onOpen: openSyncDataFlowDialog,
+    onClose: closeSyncDataFlowDialog,
   } = useDisclosure()
   const {
     isPublished,
@@ -137,6 +144,11 @@ export const PublishButton = ({
 
   const openTypebot = async () => {
     await updateTypebot({ updates: { isClosed: false }, save: true })
+  }
+
+  const syncFlowDataTypebot = async () => {
+    if (!typebot?.id) return
+    openSyncDataFlowDialog()
   }
 
   return (
@@ -249,9 +261,16 @@ export const PublishButton = ({
             <MenuItem onClick={unpublishTypebot} icon={<CloudOffIcon />}>
               {t('publishButton.dropdown.unpublish.label')}
             </MenuItem>
+            <MenuItem onClick={syncFlowDataTypebot} icon={<RefreshIcon />}>
+              {t('publishButton.dropdown.sycnc.label')}
+            </MenuItem>
           </MenuList>
         </Menu>
       )}
+      <SyncDataFlowDialog
+        isOpen={isSyncDataFlowDialogOpen}
+        onClose={closeSyncDataFlowDialog}
+      />
     </HStack>
   )
 }
