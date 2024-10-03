@@ -2,6 +2,9 @@ version: '3.3'
 
 volumes:
   db-data:
+  s3_data:
+  caddy_data:
+  caddy_config:
 
 services:
   typebot-db:
@@ -34,3 +37,17 @@ services:
     ports:
       - '8081:3000'
     env_file: .env
+
+  caddy:
+    container_name: typebot_caddy_reverse_proxy
+    image: caddy:alpine
+    restart: always
+    ports:
+      - '80:80'
+      - '443:443'
+      - '443:443/udp'
+    volumes:
+      - ./Caddyfile.dev:/etc/caddy/Caddyfile.dev
+      - ./Caddyfile.bot:/etc/caddy/Caddyfile.bot
+      - caddy_data:/data
+      - caddy_config:/config
