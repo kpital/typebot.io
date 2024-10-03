@@ -1,7 +1,0 @@
-{
-  email roylan@skarlet.ai
-}
-
-bot.kapital.co {
-  reverse_proxy typebot-viewer:8081
-}

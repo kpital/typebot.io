@@ -41,13 +41,12 @@ services:
   caddy:
     container_name: typebot_caddy_reverse_proxy
     image: caddy:alpine
-    restart: always
+    restart: unless-stopped
     ports:
       - '80:80'
       - '443:443'
       - '443:443/udp'
     volumes:
-      - ./Caddyfile.dev:/etc/caddy/Caddyfile.dev
-      - ./Caddyfile.bot:/etc/caddy/Caddyfile.bot
+      - ./Caddyfile:/etc/caddy/Caddyfile
       - caddy_data:/data
       - caddy_config:/config

@@ -1,0 +1,12 @@
+{
+  email roylan@skarlet.ai
+}
+
+dev.studio.kpital.net {
+  reverse_proxy typebot-viewer:8081
+}
+
+
+bot.studio.kpital.net {
+  reverse_proxy typebot-builder:8080
+}
