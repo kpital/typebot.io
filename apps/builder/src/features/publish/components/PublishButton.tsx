@@ -14,9 +14,9 @@ import {
 } from '@chakra-ui/react'
 import {
   ChevronLeftIcon,
-  CloudOffIcon,
-  LockedIcon,
-  UnlockedIcon,
+  // CloudOffIcon,
+  // LockedIcon,
+  // UnlockedIcon,
   RefreshIcon,
 } from '@/components/icons'
 import { useTypebot } from '@/features/editor/providers/TypebotProvider'
@@ -44,7 +44,8 @@ export const PublishButton = ({
 }: Props) => {
   const { t } = useTranslate()
   const { workspace } = useWorkspace()
-  const { push, query, pathname } = useRouter()
+  // const { push, query, pathname } = useRouter()
+  const { pathname } = useRouter()
   const { isOpen, onOpen, onClose } = useDisclosure()
   const {
     isOpen: isNewEngineWarningOpen,
@@ -59,10 +60,10 @@ export const PublishButton = ({
   const {
     isPublished,
     publishedTypebot,
-    restorePublishedTypebot,
+    // restorePublishedTypebot,
     typebot,
     isSavingLoading,
-    updateTypebot,
+    // updateTypebot,
     save,
     publishedTypebotVersion,
   } = useTypebot()
@@ -95,21 +96,22 @@ export const PublishButton = ({
           typebotId: typebot?.id as string,
         })
         if (!publishedTypebot && !pathname.endsWith('share'))
-          push(`/typebots/${query.typebotId}/share`)
+          // push(`/typebots/${query.typebotId}/share`)
+          console.log('push')
       },
     })
 
-  const { mutate: unpublishTypebotMutate, isLoading: isUnpublishing } =
-    trpc.typebot.unpublishTypebot.useMutation({
-      onError: (error) =>
-        showToast({
-          title: t('editor.header.unpublishTypebot.error.label'),
-          description: error.message,
-        }),
-      onSuccess: () => {
-        refetchPublishedTypebot()
-      },
-    })
+  // const { mutate: unpublishTypebotMutate, isLoading: isUnpublishing } =
+  //   trpc.typebot.unpublishTypebot.useMutation({
+  //     onError: (error) =>
+  //       showToast({
+  //         title: t('editor.header.unpublishTypebot.error.label'),
+  //         description: error.message,
+  //       }),
+  //     onSuccess: () => {
+  //       refetchPublishedTypebot()
+  //     },
+  //   })
 
   const hasInputFile = typebot?.groups
     .flatMap((g) => g.blocks)
@@ -129,22 +131,22 @@ export const PublishButton = ({
     })
   }
 
-  const unpublishTypebot = async () => {
-    if (!typebot?.id) return
-    if (typebot.isClosed)
-      await updateTypebot({ updates: { isClosed: false }, save: true })
-    unpublishTypebotMutate({
-      typebotId: typebot?.id,
-    })
-  }
+  // const unpublishTypebot = async () => {
+  //   if (!typebot?.id) return
+  //   if (typebot.isClosed)
+  //     await updateTypebot({ updates: { isClosed: false }, save: true })
+  //   unpublishTypebotMutate({
+  //     typebotId: typebot?.id,
+  //   })
+  // }
 
-  const closeTypebot = async () => {
-    await updateTypebot({ updates: { isClosed: true }, save: true })
-  }
+  // const closeTypebot = async () => {
+  //   await updateTypebot({ updates: { isClosed: true }, save: true })
+  // }
 
-  const openTypebot = async () => {
-    await updateTypebot({ updates: { isClosed: false }, save: true })
-  }
+  // const openTypebot = async () => {
+  //   await updateTypebot({ updates: { isClosed: false }, save: true })
+  // }
 
   const syncFlowDataTypebot = async () => {
     if (!typebot?.id) return
@@ -212,7 +214,8 @@ export const PublishButton = ({
       >
         <Button
           colorScheme="blue"
-          isLoading={isPublishing || isUnpublishing}
+          // isLoading={isPublishing || isUnpublishing}
+          isLoading={isPublishing}
           isDisabled={isPublished || isSavingLoading}
           onClick={() => {
             publishedTypebot && publishedTypebotVersion !== typebot?.version
@@ -244,7 +247,8 @@ export const PublishButton = ({
             isDisabled={isPublishing || isSavingLoading}
           />
           <MenuList>
-            {!isPublished && (
+            {/* Kpital */}
+            {/* {!isPublished && (
               <MenuItem onClick={restorePublishedTypebot}>
                 {t('publishButton.dropdown.restoreVersion.label')}
               </MenuItem>
@@ -257,10 +261,10 @@ export const PublishButton = ({
               <MenuItem onClick={openTypebot} icon={<UnlockedIcon />}>
                 {t('publishButton.dropdown.reopen.label')}
               </MenuItem>
-            )}
-            <MenuItem onClick={unpublishTypebot} icon={<CloudOffIcon />}>
+            )} */}
+            {/* <MenuItem onClick={unpublishTypebot} icon={<CloudOffIcon />}>
               {t('publishButton.dropdown.unpublish.label')}
-            </MenuItem>
+            </MenuItem> */}
             <MenuItem onClick={syncFlowDataTypebot} icon={<RefreshIcon />}>
               {t('publishButton.dropdown.sycnc.label')}
             </MenuItem>
