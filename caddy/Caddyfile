@@ -5,8 +5,3 @@
 dev.studio.skarlet.ai {
   reverse_proxy typebot-builder:8080
 }
-
-
-bot.studio.skarlet.ai {
-  reverse_proxy typebot-viewer:8081
-}
