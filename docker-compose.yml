@@ -15,10 +15,6 @@ services:
       context: .
       args:
         SCOPE: builder
-    labels:
-      virtual.host: 'dev.studio.skarlet.ai' # change to your domain
-      virtual.port: '3000'
-      virtual.tls-email: 'roylan@skarlet.ai' # change to your email
     image: typebot-builder-kpital:latest
     restart: always
     depends_on:
@@ -30,13 +26,6 @@ services:
     env_file: .env
 
   typebot-viewer:
-    labels:
-      virtual.host: 'bot.studio.skarlet.ai' # change to your domain
-      virtual.port: '3000'
-      virtual.tls-email: 'roylan@skarlet.ai' # change to your email
-      # Necessary to enable message streaming
-      virtual.proxy.directives: |
-        flush_interval -1
     image: baptistearno/typebot-viewer:latest
     restart: always
     ports:
@@ -51,11 +40,8 @@ services:
       - '80:80'
       - '443:443'
       - '443:443/udp'
-    depends_on:
-      - typebot-builder
-      - typebot-viewer
     volumes:
-      - ./caddy/Caddyfile:/etc/caddy/Caddyfile
+      - ./Caddyfile:/etc/caddy/Caddyfile
       - caddy_data:/data
       - caddy_config:/config
 

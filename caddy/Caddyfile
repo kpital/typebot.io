@@ -2,6 +2,6 @@
   email roylan@skarlet.ai
 }
 
-dev.studio.skarlet.ai:80 {
-  reverse_proxy typebot-builder:3000
+dev.studio.skarlet.ai {
+  reverse_proxy typebot-builder:8080
 }
