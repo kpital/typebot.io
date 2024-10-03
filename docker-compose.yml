@@ -1,11 +1,5 @@
 version: '3.3'
 
-volumes:
-  db-data:
-  s3_data:
-  caddy_data:
-  caddy_config:
-
 services:
   typebot-db:
     image: postgres:14-alpine
@@ -50,3 +44,9 @@ services:
       - ./Caddyfile:/etc/caddy/Caddyfile
       - caddy_data:/data
       - caddy_config:/config
+
+volumes:
+  db-data:
+  s3_data:
+  caddy_data:
+  caddy_config:
