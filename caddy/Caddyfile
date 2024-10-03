@@ -4,4 +4,5 @@
 
 dev.studio.skarlet.ai {
   reverse_proxy typebot-builder:8080
+  tls {}
 }
