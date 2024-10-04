@@ -32,21 +32,6 @@ services:
       - '8081:3000'
     env_file: .env
 
-  caddy:
-    container_name: typebot_caddy_reverse_proxy
-    image: caddy:alpine
-    restart: unless-stopped
-    ports:
-      - '80:80'
-      - '443:443'
-      - '443:443/udp'
-    volumes:
-      - ./caddy/Caddyfile:/etc/caddy/Caddyfile
-      - caddy_data:/data
-      - caddy_config:/config
-
 volumes:
   db-data:
   s3_data:
-  caddy_data:
-  caddy_config:

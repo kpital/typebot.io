@@ -1,7 +1,0 @@
-{
-  email roylan@skarlet.ai
-}
-
-dev.studio.skarlet.ai {
-  reverse_proxy typebot-builder:8080
-}
