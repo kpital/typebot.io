@@ -15,4 +15,5 @@ export const forgedBlockIds = [
   'nocodb',
   'segment',
   'groq',
+  'transferagent',
 ] as const satisfies ForgedBlock['type'][]

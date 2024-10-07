@@ -50,7 +50,7 @@ const IntegrationBlockTypeVisible = [
   IntegrationBlockType.EMAIL,
 ]
 
-const forgedBlocksVisible = [forgedBlocks.openai]
+const forgedBlocksVisible = [forgedBlocks.openai, forgedBlocks.transferagent]
 
 export const BlocksSideBar = () => {
   const { t } = useTranslate()
