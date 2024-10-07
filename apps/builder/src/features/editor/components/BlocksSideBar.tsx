@@ -30,17 +30,19 @@ import { forgedBlocks } from '@typebot.io/forge-repository/definitions'
 // Integration blocks migrated to forged blocks
 const legacyIntegrationBlocks = [IntegrationBlockType.OPEN_AI]
 
+// Visible Bubble blocks. Kpital
+const BubbleBlockTypeVisible = [BubbleBlockType.TEXT, BubbleBlockType.IMAGE]
+
 // Input blocks visible in the sidebar. Kpital
-const InputBlockTypeVisible = [
-  InputBlockType.TEXT,
-  InputBlockType.NUMBER,
-  InputBlockType.EMAIL,
-  InputBlockType.URL,
-  InputBlockType.DATE,
-  InputBlockType.PHONE,
-  InputBlockType.CHOICE,
-  InputBlockType.PICTURE_CHOICE,
-  InputBlockType.FILE,
+const InputBlockTypeVisible = [InputBlockType.TEXT, InputBlockType.CHOICE]
+
+// Visible Logic blocks. Kpital
+const LogicBlockTypeVisible = [
+  LogicBlockType.SET_VARIABLE,
+  LogicBlockType.CONDITION,
+  LogicBlockType.SCRIPT,
+  LogicBlockType.JUMP,
+  LogicBlockType.TYPEBOT_LINK,
 ]
 
 // Integration blocks visible in the sidebar. Kpital
@@ -49,7 +51,7 @@ const IntegrationBlockTypeVisible = [
   IntegrationBlockType.WEBHOOK,
   IntegrationBlockType.EMAIL,
 ]
-
+// Visible forged blocks. Kpital
 const forgedBlocksVisible = [forgedBlocks.openai, forgedBlocks.transferagent]
 
 export const BlocksSideBar = () => {
@@ -191,7 +193,7 @@ export const BlocksSideBar = () => {
             {t('editor.sidebarBlocks.blockType.bubbles.heading')}
           </Text>
           <SimpleGrid columns={2} spacing="3">
-            {Object.values(BubbleBlockType)
+            {Object.values(BubbleBlockTypeVisible)
               .filter((type) =>
                 type.toLowerCase().includes(searchInput.toLowerCase())
               )
@@ -229,7 +231,7 @@ export const BlocksSideBar = () => {
             {t('editor.sidebarBlocks.blockType.logic.heading')}
           </Text>
           <SimpleGrid columns={2} spacing="3">
-            {Object.values(LogicBlockType)
+            {Object.values(LogicBlockTypeVisible)
               .filter((type) =>
                 type.toLowerCase().includes(searchInput.toLowerCase())
               )
