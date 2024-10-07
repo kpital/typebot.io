@@ -1,11 +1,12 @@
 import { createBlock } from '@typebot.io/forge'
-import { TransferagentLogo } from './logo'
-import { createAgent } from './actions/CreateAgent'
+import { TransferagentLightLogo, TransferagentDarkLogo } from './logo'
+import { createAgent } from './actions/createAgent'
 
 export const transferagentBlock = createBlock({
   id: 'transferagent',
   name: 'TransferAgent',
   tags: [],
-  LightLogo: TransferagentLogo,
+  LightLogo: TransferagentLightLogo,
+  DarkLogo: TransferagentDarkLogo,
   actions: [createAgent],
 })
