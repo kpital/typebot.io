@@ -15,7 +15,6 @@ import {
   FormLabel,
   VStack,
   Select,
-  Text,
   FormErrorMessage,
 } from '@chakra-ui/react'
 
