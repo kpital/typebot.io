@@ -1,6 +1,7 @@
 {
   "SyncDataFlowDialog.campaignId.label": "Compaña",
   "SyncDataFlowDialog.campaignId.placeholder": "Seleccione la campaña",
+  "SyncDataFlowDialog.emptyCampaigns.title": "No hay campañas disponibles para esta cuenta",
   "SyncDataFlowDialog.errorToast.title": "No se pudo actulizar el flujo. Inténtalo de nuevo.",
   "SyncDataFlowDialog.nextButton.label": "Siguiente",
   "SyncDataFlowDialog.password.label": "Contraseña",

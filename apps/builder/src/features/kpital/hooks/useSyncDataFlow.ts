@@ -27,20 +27,20 @@ export const useSyncDataFlow = (onClose: () => void) => {
 
   useEffect(() => {
     const storedData = localStorage.getItem(storageKey)
-    console.log('storedData', storedData)
     if (storedData) {
       try {
         const parsedData = JSON.parse(storedData)
         setInputsFields((prevInputs) => ({
           ...prevInputs,
           url: parsedData.url || '',
+          username: (parsedData.user || session?.user?.email) ?? '',
           campaignId: parsedData.campaignId || '',
         }))
       } catch (error) {
         console.error('Error al analizar los datos almacenados:', error)
       }
     }
-  }, [storageKey])
+  }, [storageKey, session?.user?.email])
 
   const handleInputChange = useCallback(
     (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
@@ -72,8 +72,11 @@ export const useSyncDataFlow = (onClose: () => void) => {
    */
   const handleNext = async () => {
     setIsLoading(true)
-    const user = session?.user?.email ?? ''
-    const { token, error } = await getToken(user, inputs.password, inputs.url)
+    const { token, error } = await getToken(
+      inputs.username,
+      inputs.password,
+      inputs.url
+    )
 
     if (error) {
       toast({
@@ -87,8 +90,16 @@ export const useSyncDataFlow = (onClose: () => void) => {
 
     // Get the campaigns available for the user
     if (token) {
-      await fetchCampaigns(inputs.url, token)
+      const campaigns = await fetchCampaigns(inputs.url, token)
+      if (campaigns && campaigns.length === 0) {
+        toast({
+          position: 'top-right',
+          title: t('SyncDataFlowDialog.emptyCampaigns.title'),
+          status: 'success',
+        })
+      }
     }
+
     setIsLoading(false)
   }
 
@@ -105,7 +116,11 @@ export const useSyncDataFlow = (onClose: () => void) => {
     // Save inputs in local storage
     localStorage.setItem(
       storageKey,
-      JSON.stringify({ url: inputs.url, campaignId: inputs.campaignId })
+      JSON.stringify({
+        user: inputs.username,
+        url: inputs.url,
+        campaignId: inputs.campaignId,
+      })
     )
     setIsLoading(false)
   }

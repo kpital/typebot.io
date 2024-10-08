@@ -30,6 +30,7 @@ export const useCampaigns = () => {
 
       const data: Campaign[] = await response.json()
       setCampaigns(data)
+      return data
     } catch (error) {
       console.error('Error al obtener las campañas:', error)
       setError('Error al obtener las campañas. Por favor, intente de nuevo.')

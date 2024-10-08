@@ -1,6 +1,7 @@
 {
   "SyncDataFlowDialog.campaignId.label": "Campaing",
   "SyncDataFlowDialog.campaignId.placeholder": "Select campaing",
+  "SyncDataFlowDialog.emptyCampaigns.title": "Empty campaigns",
   "SyncDataFlowDialog.errorToast.title": "Failed to update the flow. Please try again.",
   "SyncDataFlowDialog.nextButton.label": "Next",
   "SyncDataFlowDialog.password.label": "Password",
