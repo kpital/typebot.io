@@ -10,6 +10,7 @@
   "SyncDataFlowDialog.title": "Sync flow",
   "SyncDataFlowDialog.username.label": "Username",
   "SyncDataFlowDialog.username.placeholder": "Username",
+  "SyncDataFlowDialog.webAddress.error": "Invalid URL",
   "SyncDataFlowDialog.webAddress.label": "URL Skarlet",
   "SyncDataFlowDialog.webAddress.placeholder": "https://domain.skarlet.net",
   "account.apiTokens.createButton.label": "Create",

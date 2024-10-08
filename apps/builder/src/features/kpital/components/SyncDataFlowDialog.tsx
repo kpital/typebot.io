@@ -15,6 +15,7 @@ import {
   FormLabel,
   VStack,
   Select,
+  FormErrorMessage,
 } from '@chakra-ui/react'
 
 import { useSyncDataFlow } from '@/features/kpital/hooks/useSyncDataFlow'
@@ -27,6 +28,7 @@ export const SyncDataFlowDialog = ({ isOpen, onClose }: SyncDataFlowProps) => {
   const { t } = useTranslate()
   const {
     inputs,
+    errors,
     isLoading,
     campaigns,
     handleInputChange,
@@ -43,7 +45,7 @@ export const SyncDataFlowDialog = ({ isOpen, onClose }: SyncDataFlowProps) => {
           <ModalCloseButton />
           <ModalBody>
             <VStack spacing={8}>
-              <FormControl isRequired>
+              <FormControl isRequired isInvalid={!!errors}>
                 <FormLabel>
                   {t('SyncDataFlowDialog.webAddress.label')}
                 </FormLabel>
@@ -52,7 +54,11 @@ export const SyncDataFlowDialog = ({ isOpen, onClose }: SyncDataFlowProps) => {
                   value={inputs.url}
                   onChange={handleInputChange}
                   placeholder={t('SyncDataFlowDialog.webAddress.placeholder')}
+                  isInvalid={!!errors.url}
                 />
+                {errors.url && (
+                  <FormErrorMessage>{errors.url}</FormErrorMessage>
+                )}
               </FormControl>
 
               <FormControl isRequired>
@@ -64,6 +70,7 @@ export const SyncDataFlowDialog = ({ isOpen, onClose }: SyncDataFlowProps) => {
                   onChange={handleInputChange}
                   placeholder={t('SyncDataFlowDialog.username.placeholder')}
                 />
+                <FormErrorMessage>Hola</FormErrorMessage>
               </FormControl>
 
               <FormControl isRequired>

@@ -7,6 +7,7 @@ import { useTypebot } from '@/features/editor/providers/TypebotProvider'
 import { useAuthKpital } from './useAuthKpital'
 import { useCampaigns } from './useCampaigns'
 import { InputsSaveFlow } from '../types/types'
+import { validateUrl } from '../utils/validateUrl'
 
 export const useSyncDataFlow = (onClose: () => void) => {
   const { t } = useTranslate()
@@ -15,6 +16,7 @@ export const useSyncDataFlow = (onClose: () => void) => {
   const toast = useToast()
   const storageKey = `@kpital.flow:${typebot?.id}`
 
+  const [errors, setErrors] = useState<Record<string, string>>({})
   const [isLoading, setIsLoading] = useState(false)
   const [inputs, setInputsFields] = useState<InputsSaveFlow>({
     url: '',
@@ -47,6 +49,16 @@ export const useSyncDataFlow = (onClose: () => void) => {
         ...prevInputs,
         [name]: value,
       }))
+
+      const newErrors: Record<string, string> = {}
+      switch (name) {
+        case 'url':
+          if (!validateUrl(value)) {
+            newErrors.url = 'URL no válida'
+          }
+          break
+      }
+      setErrors(newErrors)
     },
     []
   )
@@ -134,6 +146,7 @@ export const useSyncDataFlow = (onClose: () => void) => {
 
   return {
     inputs,
+    errors,
     isLoading,
     campaigns,
     handleInputChange,
