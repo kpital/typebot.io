@@ -56,6 +56,17 @@ export const SyncDataFlowDialog = ({ isOpen, onClose }: SyncDataFlowProps) => {
               </FormControl>
 
               <FormControl isRequired>
+                <FormLabel>{t('SyncDataFlowDialog.username.label')}</FormLabel>
+                <Input
+                  name="username"
+                  type="text"
+                  value={inputs.username}
+                  onChange={handleInputChange}
+                  placeholder={t('SyncDataFlowDialog.username.placeholder')}
+                />
+              </FormControl>
+
+              <FormControl isRequired>
                 <FormLabel>{t('SyncDataFlowDialog.password.label')}</FormLabel>
                 <Input
                   name="password"

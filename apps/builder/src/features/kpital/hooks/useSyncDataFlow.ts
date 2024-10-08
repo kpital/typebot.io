@@ -1,31 +1,58 @@
 import assert from 'assert'
-import { useState, useCallback } from 'react'
+import { useState, useCallback, useEffect } from 'react'
 import { useSession } from 'next-auth/react'
 import { useToast } from '@chakra-ui/react'
 import { useTranslate } from '@tolgee/react'
 import { useTypebot } from '@/features/editor/providers/TypebotProvider'
 import { useAuthKpital } from './useAuthKpital'
 import { useCampaigns } from './useCampaigns'
-import { useLocalStorageFlow } from './useLocalStorageFlow'
+import { InputsSaveFlow } from '../types/types'
 
 export const useSyncDataFlow = (onClose: () => void) => {
   const { t } = useTranslate()
   const { typebot } = useTypebot()
   const { data: session } = useSession()
   const toast = useToast()
-  const { inputs, updateInputs } = useLocalStorageFlow(typebot?.id ?? '')
+  const storageKey = `@kpital.flow:${typebot?.id}`
 
   const [isLoading, setIsLoading] = useState(false)
-  const { token, getToken } = useAuthKpital()
-  const { campaigns, fetchCampaigns, setCampaigns } = useCampaigns()
+  const [inputs, setInputsFields] = useState<InputsSaveFlow>({
+    url: '',
+    username: session?.user?.email ?? '',
+    password: '',
+    campaignId: '',
+  })
+
+  useEffect(() => {
+    const storedData = localStorage.getItem(storageKey)
+    console.log('storedData', storedData)
+    if (storedData) {
+      try {
+        const parsedData = JSON.parse(storedData)
+        setInputsFields((prevInputs) => ({
+          ...prevInputs,
+          url: parsedData.url || '',
+          campaignId: parsedData.campaignId || '',
+        }))
+      } catch (error) {
+        console.error('Error al analizar los datos almacenados:', error)
+      }
+    }
+  }, [storageKey])
 
   const handleInputChange = useCallback(
     (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
       const { name, value } = e.target
-      updateInputs({ [name]: value })
+      setInputsFields((prevInputs) => ({
+        ...prevInputs,
+        [name]: value,
+      }))
     },
-    [updateInputs]
+    []
   )
+
+  const { token, getToken } = useAuthKpital()
+  const { campaigns, fetchCampaigns, setCampaigns } = useCampaigns()
 
   /**
    * This function is responsible for getting the list of campaigns
@@ -63,6 +90,11 @@ export const useSyncDataFlow = (onClose: () => void) => {
 
     await updateDataFlow(JSON.stringify(typebot))
 
+    // Save inputs in local storage
+    localStorage.setItem(
+      storageKey,
+      JSON.stringify({ url: inputs.url, campaignId: inputs.campaignId })
+    )
     setIsLoading(false)
   }
 

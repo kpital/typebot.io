@@ -1,35 +1,30 @@
 import { useState, useEffect } from 'react'
-import { StoredFlowInputs, AllFlowInputs } from '../types/types'
 
 const STORAGE_KEY_PREFIX = '@kpital.flow'
 
-export const useLocalStorageFlow = (flowId: string) => {
+export function useLocalStorageFlow<T extends Record<string, string>>(
+  flowId: string,
+  initialValues: T
+) {
   const storageKey = `${STORAGE_KEY_PREFIX}:${flowId}`
 
-  const [inputs, setInputs] = useState<AllFlowInputs>({
-    url: '',
-    password: '',
-    campaignId: '',
-  })
+  const [values, setValues] = useState<T>(initialValues)
 
   useEffect(() => {
-    const storedInputs = localStorage.getItem(storageKey)
-    if (storedInputs) {
-      const parsedInputs: StoredFlowInputs = JSON.parse(storedInputs)
-      setInputs({ ...parsedInputs, password: '' })
+    const storedValues = localStorage.getItem(storageKey)
+    if (storedValues) {
+      const parsedValues = JSON.parse(storedValues) as Partial<T>
+      setValues((prevValues) => ({ ...prevValues, ...parsedValues }))
     }
   }, [flowId, storageKey])
 
-  const updateInputs = (newInputs: Partial<AllFlowInputs>) => {
-    const updatedInputs = { ...inputs, ...newInputs }
-    setInputs(updatedInputs)
-
-    const inputsToStore: StoredFlowInputs = {
-      url: updatedInputs.url,
-      campaignId: updatedInputs.campaignId,
-    }
-    localStorage.setItem(storageKey, JSON.stringify(inputsToStore))
+  const updateValues = (newValues: Partial<T>) => {
+    setValues((prevValues) => {
+      const updatedValues = { ...prevValues, ...newValues }
+      localStorage.setItem(storageKey, JSON.stringify(updatedValues))
+      return updatedValues
+    })
   }
 
-  return { inputs, updateInputs }
+  return { values, updateValues }
 }

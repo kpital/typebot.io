@@ -8,6 +8,8 @@
   "SyncDataFlowDialog.submitButton.label": "Sync now",
   "SyncDataFlowDialog.successToast.title": "Flow updated",
   "SyncDataFlowDialog.title": "Sync flow",
+  "SyncDataFlowDialog.username.label": "Username",
+  "SyncDataFlowDialog.username.placeholder": "Username",
   "SyncDataFlowDialog.webAddress.label": "URL Skarlet",
   "SyncDataFlowDialog.webAddress.placeholder": "https://domain.skarlet.net",
   "account.apiTokens.createButton.label": "Create",

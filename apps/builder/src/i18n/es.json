@@ -8,6 +8,8 @@
   "SyncDataFlowDialog.submitButton.label": "Sincronizar ahora",
   "SyncDataFlowDialog.successToast.title": "Flujo actualizado",
   "SyncDataFlowDialog.title": "Sincronizar flujo",
+  "SyncDataFlowDialog.username.label": "Usuario",
+  "SyncDataFlowDialog.username.placeholder": "Usuario",
   "SyncDataFlowDialog.webAddress.label": "URL Skarlet",
   "account.apiTokens.createButton.label": "Crear",
   "account.apiTokens.createModal.copyInstruction": "Por favor, copia tu token y guárdalo en un lugar seguro.",
