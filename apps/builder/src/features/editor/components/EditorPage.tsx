@@ -14,10 +14,10 @@ import {
   useEditor,
 } from "../providers/EditorProvider";
 import { useTypebot } from "../providers/TypebotProvider";
-import { BlocksSideBar } from "./BlocksSideBar";
-import { BoardMenuButton } from "./BoardMenuButton";
+import { BlocksSideBar } from "./BlocksSideBarKpital";
+import { BoardMenuButton } from "./BoardMenuButtonKpital";
 import { SuspectedTypebotBanner } from "./SuspectedTypebotBanner";
-import { TypebotHeader } from "./TypebotHeader";
+import { TypebotHeader } from "./TypebotHeaderKpital";
 import { TypebotNotFoundPage } from "./TypebotNotFoundPage";
 
 export const EditorPage = () => {

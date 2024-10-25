@@ -4,7 +4,7 @@ import {
   defaultTimeFilter,
   type timeFilterValues,
 } from "@/features/analytics/constants";
-import { TypebotHeader } from "@/features/editor/components/TypebotHeader";
+import { TypebotHeader } from "@/features/editor/components/TypebotHeaderKpital";
 import { TypebotNotFoundPage } from "@/features/editor/components/TypebotNotFoundPage";
 import { useTypebot } from "@/features/editor/providers/TypebotProvider";
 import { useWorkspace } from "@/features/workspace/WorkspaceProvider";

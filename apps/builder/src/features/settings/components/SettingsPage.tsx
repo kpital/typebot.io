@@ -1,5 +1,5 @@
 import { Seo } from "@/components/Seo";
-import { TypebotHeader } from "@/features/editor/components/TypebotHeader";
+import { TypebotHeader } from "@/features/editor/components/TypebotHeaderKpital";
 import { TypebotNotFoundPage } from "@/features/editor/components/TypebotNotFoundPage";
 import { headerHeight } from "@/features/editor/constants";
 import { useTypebot } from "@/features/editor/providers/TypebotProvider";

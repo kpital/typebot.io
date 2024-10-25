@@ -5,7 +5,7 @@ import { UpgradeButton } from "@/features/billing/components/UpgradeButton";
 import { hasProPerks } from "@/features/billing/helpers/hasProPerks";
 import { CustomDomainsDropdown } from "@/features/customDomains/components/CustomDomainsDropdown";
 import DomainStatusIcon from "@/features/customDomains/components/DomainStatusIcon";
-import { TypebotHeader } from "@/features/editor/components/TypebotHeader";
+import { TypebotHeader } from "@/features/editor/components/TypebotHeaderKpital";
 import { TypebotNotFoundPage } from "@/features/editor/components/TypebotNotFoundPage";
 import { useTypebot } from "@/features/editor/providers/TypebotProvider";
 import { useWorkspace } from "@/features/workspace/WorkspaceProvider";
