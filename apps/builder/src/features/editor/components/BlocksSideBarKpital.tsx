@@ -51,7 +51,7 @@ const IntegrationBlockTypeVisible = [
   IntegrationBlockType.EMAIL,
 ];
 // Visible forged blocks. Kpital
-const forgedBlocksVisible = [forgedBlocks.openai];
+const forgedBlocksVisible = [forgedBlocks.openai, forgedBlocks.transferagent];
 
 // Visible Logic blocks. Kpital
 const LogicBlockTypeVisible = [

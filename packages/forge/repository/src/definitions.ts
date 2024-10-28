@@ -12,6 +12,7 @@ import { openAIBlock } from "@typebot.io/openai-block";
 import { qrCodeBlock } from "@typebot.io/qrcode-block";
 import { segmentBlock } from "@typebot.io/segment-block";
 import { togetherAiBlock } from "@typebot.io/together-ai-block";
+import { transferagentBlock } from "@typebot.io/transferagent-block";
 import { zendeskBlock } from "@typebot.io/zendesk-block";
 
 export const forgedBlocks = {
@@ -29,6 +30,7 @@ export const forgedBlocks = {
   [segmentBlock.id]: segmentBlock,
   [groqBlock.id]: groqBlock,
   [zendeskBlock.id]: zendeskBlock,
+  [transferagentBlock.id]: transferagentBlock,
 };
 export type ForgedBlockDefinition =
   (typeof forgedBlocks)[keyof typeof forgedBlocks];
