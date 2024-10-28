@@ -16,4 +16,4 @@ export const TransferagentDarkLogo = (props: React.SVGProps<SVGSVGElement>) => (
       strokeOpacity="1"
     />
   </svg>
-)
+);
