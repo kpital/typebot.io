@@ -8,7 +8,7 @@ import {
   RedoIcon,
   UndoIcon,
 } from "@/components/icons";
-import { PublishButton } from "@/features/publish/components/PublishButton";
+import { PublishButton } from "@/features/publish/components/PublishButtonKpital";
 import { ShareTypebotButton } from "@/features/share/components/ShareTypebotButton";
 import { useWorkspace } from "@/features/workspace/WorkspaceProvider";
 import { isCloudProdInstance } from "@/helpers/isCloudProdInstance";

@@ -39,7 +39,7 @@ import { LogicalOperator } from "@typebot.io/conditions/constants";
 import type { Comparison } from "@typebot.io/conditions/schemas";
 import { isDefined } from "@typebot.io/lib/utils";
 import { defaultSessionExpiryTimeout } from "@typebot.io/settings/constants";
-import { PublishButton } from "../../../PublishButton";
+import { PublishButton } from "../../../PublishButtonKpital";
 import type { ModalProps } from "../../EmbedButton";
 import { WhatsAppComparisonItem } from "./WhatsAppComparisonItem";
 import { WhatsAppCredentialsModal } from "./WhatsAppCredentialsModal";
