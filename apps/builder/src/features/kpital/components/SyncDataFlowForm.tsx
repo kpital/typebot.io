@@ -14,7 +14,7 @@ import {
 import { useTranslate } from '@tolgee/react'
 import { useKpitalConnection } from '../hooks/useExternalServerConnection'
 
-export const SyncDataFlowForm = () => {
+export const SyncDataFlowForm = ({ workspaceId }: { workspaceId: string }) => {
   const { t } = useTranslate()
 
   const {
@@ -26,7 +26,7 @@ export const SyncDataFlowForm = () => {
     handleInputChange,
     createNewConnection,
     updateExistingConnection,
-  } = useKpitalConnection('cm2t3osv60001uksao896spoq')
+  } = useKpitalConnection(workspaceId)
 
   useEffect(() => {
     if (connections?.length) {
@@ -34,22 +34,22 @@ export const SyncDataFlowForm = () => {
         url_backend: connections[0].url_backend,
         user: connections[0].user,
         password: connections[0].password,
-        workspaceId: 'cm2t3osv60001uksao896spoq',
+        workspaceId: workspaceId,
       })
     }
-  }, [connections, setInputsFields])
+  }, [connections, setInputsFields, workspaceId])
 
   const handleSaveUpdateConnection = async () => {
     if (isEditing) {
       await updateExistingConnection(connections[0].id, {
-        workspaceId: 'cm2t3osv60001uksao896spoq',
+        workspaceId: workspaceId,
         url_backend: inputs.url_backend,
         user: inputs.user,
         password: inputs.password,
       })
     } else {
       await createNewConnection({
-        workspaceId: 'cm2t3osv60001uksao896spoq',
+        workspaceId: workspaceId,
         url_backend: inputs.url_backend,
         user: inputs.user,
         password: inputs.password,
@@ -94,13 +94,12 @@ export const SyncDataFlowForm = () => {
             <FormControl isRequired>
               <FormLabel>{t('SyncDataFlowDialog.username.label')}</FormLabel>
               <Input
-                name="username"
+                name="user"
                 type="text"
                 value={inputs.user}
                 onChange={handleInputChange}
                 placeholder={t('SyncDataFlowDialog.username.placeholder')}
               />
-              <FormErrorMessage>Hola</FormErrorMessage>
             </FormControl>
 
             <FormControl isRequired>

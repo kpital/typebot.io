@@ -1,5 +1,4 @@
-export interface InputsSaveFlow extends Record<string, string> {
-  url: string
+export interface InputsCampaign {
   campaignId: string
 }
 

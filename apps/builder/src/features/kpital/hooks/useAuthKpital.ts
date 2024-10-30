@@ -11,9 +11,9 @@ export const useAuthKpital = () => {
   const [error, setError] = useState<string | null>(null)
 
   const getToken = async (
+    baseUrl: string,
     user: string,
-    password: string,
-    baseUrl: string
+    password: string
   ): Promise<{ token: string | null; error: string | null }> => {
     setIsLoading(true)
     setError(null)

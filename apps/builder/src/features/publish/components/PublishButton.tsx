@@ -274,6 +274,7 @@ export const PublishButton = ({
       <SyncDataFlowDialog
         isOpen={isSyncDataFlowDialogOpen}
         onClose={closeSyncDataFlowDialog}
+        workspaceId={workspace?.id ?? ''}
       />
     </HStack>
   )

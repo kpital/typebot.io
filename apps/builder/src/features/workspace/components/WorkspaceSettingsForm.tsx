@@ -79,7 +79,7 @@ export const WorkspaceSettingsForm = ({ onClose }: { onClose: () => void }) => {
               Used when interacting with the Typebot API.
             </FormHelperText>
           </FormControl>
-          <SyncDataFlowForm />
+          <SyncDataFlowForm workspaceId={workspace.id} />
         </>
       )}
       {workspace && workspaces && workspaces.length > 1 && (

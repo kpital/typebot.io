@@ -1,40 +1,60 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 
 import { useTranslate } from '@tolgee/react'
 import {
-  Button,
   Modal,
+  Select,
+  Button,
+  FormControl,
+  FormLabel,
   ModalOverlay,
   ModalContent,
   ModalHeader,
   ModalFooter,
   ModalBody,
   ModalCloseButton,
-  Input,
-  FormControl,
-  FormLabel,
   VStack,
-  Select,
-  FormErrorMessage,
 } from '@chakra-ui/react'
 
 import { useSyncDataFlow } from '@/features/kpital/hooks/useSyncDataFlow'
-export type SyncDataFlowProps = {
+import { useKpitalConnection } from '@/features/kpital/hooks/useExternalServerConnection'
+import { useCampaigns } from '@/features/kpital/hooks/useCampaigns'
+import { useAuthKpital } from '../hooks/useAuthKpital'
+
+type SyncDataFlowProps = {
   isOpen: boolean
+  workspaceId: string
   onClose: () => void
 }
 
-export const SyncDataFlowDialog = ({ isOpen, onClose }: SyncDataFlowProps) => {
+export const SyncDataFlowDialog = ({
+  isOpen,
+  workspaceId,
+  onClose,
+}: SyncDataFlowProps) => {
   const { t } = useTranslate()
-  const {
-    inputs,
-    errors,
-    isLoading,
-    campaigns,
-    handleInputChange,
-    handleNext,
-    handleSubmit,
-  } = useSyncDataFlow(onClose)
+  const { inputs, handleSubmit, isLoading, setInputs } =
+    useSyncDataFlow(onClose)
+  const { connections } = useKpitalConnection(workspaceId)
+  const { fetchCampaigns, campaigns } = useCampaigns()
+  const { getToken } = useAuthKpital()
+
+  useEffect(() => {
+    const fetchData = async () => {
+      if (connections?.length) {
+        const url = connections[0].url_backend
+        const user = connections[0].user
+        const password = connections[0].password
+        const token = await getToken(url, user, password)
+
+        if (token.token) {
+          fetchCampaigns(url, token.token)
+        }
+      }
+    }
+    fetchData()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [connections])
 
   return (
     <>
@@ -45,45 +65,6 @@ export const SyncDataFlowDialog = ({ isOpen, onClose }: SyncDataFlowProps) => {
           <ModalCloseButton />
           <ModalBody>
             <VStack spacing={8}>
-              <FormControl isRequired isInvalid={!!errors}>
-                <FormLabel>
-                  {t('SyncDataFlowDialog.webAddress.label')}
-                </FormLabel>
-                <Input
-                  name="url"
-                  value={inputs.url}
-                  onChange={handleInputChange}
-                  placeholder={t('SyncDataFlowDialog.webAddress.placeholder')}
-                  isInvalid={!!errors.url}
-                />
-                {errors.url && (
-                  <FormErrorMessage>{errors.url}</FormErrorMessage>
-                )}
-              </FormControl>
-
-              <FormControl isRequired>
-                <FormLabel>{t('SyncDataFlowDialog.username.label')}</FormLabel>
-                <Input
-                  name="username"
-                  type="text"
-                  value={inputs.username}
-                  onChange={handleInputChange}
-                  placeholder={t('SyncDataFlowDialog.username.placeholder')}
-                />
-                <FormErrorMessage>Hola</FormErrorMessage>
-              </FormControl>
-
-              <FormControl isRequired>
-                <FormLabel>{t('SyncDataFlowDialog.password.label')}</FormLabel>
-                <Input
-                  name="password"
-                  type="password"
-                  value={inputs.password}
-                  onChange={handleInputChange}
-                  placeholder={t('SyncDataFlowDialog.password.placeholder')}
-                />
-              </FormControl>
-
               {campaigns.length > 0 && (
                 <FormControl isRequired>
                   <FormLabel>
@@ -92,8 +73,10 @@ export const SyncDataFlowDialog = ({ isOpen, onClose }: SyncDataFlowProps) => {
                   <Select
                     name="campaignId"
                     value={inputs.campaignId}
-                    onChange={handleInputChange}
                     placeholder={t('SyncDataFlowDialog.campaignId.placeholder')}
+                    onChange={(e) => {
+                      setInputs({ ...inputs, campaignId: e.target.value })
+                    }}
                   >
                     {campaigns.map((campaign) => (
                       <option key={campaign.id} value={campaign.id}>
@@ -106,28 +89,15 @@ export const SyncDataFlowDialog = ({ isOpen, onClose }: SyncDataFlowProps) => {
             </VStack>
           </ModalBody>
           <ModalFooter>
-            {campaigns.length === 0 && (
-              <Button
-                colorScheme="blue"
-                mr={3}
-                onClick={handleNext}
-                isLoading={isLoading}
-                isDisabled={!inputs.url || !inputs.password}
-              >
-                {t('SyncDataFlowDialog.nextButton.label')}
-              </Button>
-            )}
-            {campaigns.length > 0 && (
-              <Button
-                colorScheme="blue"
-                mr={3}
-                onClick={handleSubmit}
-                isLoading={isLoading}
-                isDisabled={!inputs.campaignId}
-              >
-                {t('SyncDataFlowDialog.submitButton.label')}
-              </Button>
-            )}
+            <Button
+              colorScheme="blue"
+              mr={3}
+              onClick={handleSubmit}
+              isLoading={isLoading}
+              isDisabled={!inputs.campaignId}
+            >
+              {t('SyncDataFlowDialog.submitButton.label')}
+            </Button>
           </ModalFooter>
         </ModalContent>
       </Modal>
