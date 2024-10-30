@@ -18,7 +18,7 @@ import { useWorkspace } from '../WorkspaceProvider'
 import { TextInput } from '@/components/inputs'
 import { useTranslate } from '@tolgee/react'
 import { CopyButton } from '@/components/CopyButton'
-
+import { SyncDataFlowForm } from '@/features/kpital/components/SyncDataFlowForm'
 export const WorkspaceSettingsForm = ({ onClose }: { onClose: () => void }) => {
   const { t } = useTranslate()
   const { workspace, workspaces, updateWorkspace, deleteCurrentWorkspace } =
@@ -79,6 +79,7 @@ export const WorkspaceSettingsForm = ({ onClose }: { onClose: () => void }) => {
               Used when interacting with the Typebot API.
             </FormHelperText>
           </FormControl>
+          <SyncDataFlowForm />
         </>
       )}
       {workspace && workspaces && workspaces.length > 1 && (

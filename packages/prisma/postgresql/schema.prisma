@@ -98,6 +98,7 @@ model Workspace {
   isPastDue                     Boolean               @default(false)
   isVerified                    Boolean?
   themeTemplates                ThemeTemplate[]
+  skarletConnections            SkarletConnection[]
 }
 
 model MemberInWorkspace {
@@ -402,4 +403,17 @@ enum CollaborationType {
   READ
   WRITE
   FULL_ACCESS
+}
+
+model SkarletConnection {
+  id          String    @id @default(cuid())
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @default(now()) @updatedAt
+  url_backend String
+  user        String
+  password    String
+  workspaceId String
+  workspace   Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+
+  @@index([workspaceId])
 }

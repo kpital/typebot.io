@@ -159,6 +159,10 @@ export const useSyncDataFlow = (onClose: () => void) => {
     }
   }
 
+  const handleSaveSettings = async () => {
+    console.log('saveSettings')
+  }
+
   return {
     inputs,
     errors,
@@ -167,5 +171,6 @@ export const useSyncDataFlow = (onClose: () => void) => {
     handleInputChange,
     handleNext,
     handleSubmit,
+    handleSaveSettings,
   }
 }

@@ -12,6 +12,7 @@ import { collaboratorsRouter } from '@/features/collaboration/api/router'
 import { customDomainsRouter } from '@/features/customDomains/api/router'
 import { publicWhatsAppRouter } from '@/features/whatsapp/router'
 import { folderRouter } from '@/features/folders/api/router'
+import { kpitalRouter } from '@/features/kpital/api/router'
 
 export const publicRouter = router({
   getLinkedTypebots,
@@ -27,6 +28,7 @@ export const publicRouter = router({
   customDomains: customDomainsRouter,
   whatsApp: publicWhatsAppRouter,
   folders: folderRouter,
+  kpital: kpitalRouter,
 })
 
 export type PublicRouter = typeof publicRouter
