@@ -20,6 +20,7 @@ import { useSyncDataFlow } from '@/features/kpital/hooks/useSyncDataFlow'
 import { useKpitalConnection } from '@/features/kpital/hooks/useExternalServerConnection'
 import { useCampaigns } from '@/features/kpital/hooks/useCampaigns'
 import { useAuthKpital } from '../hooks/useAuthKpital'
+import { toast } from 'sonner'
 
 type SyncDataFlowProps = {
   isOpen: boolean
@@ -47,9 +48,13 @@ export const SyncDataFlowDialog = ({
         const password = connections[0].password
         const token = await getToken(url, user, password)
 
-        if (token.token) {
-          fetchCampaigns(url, token.token)
+        // Si no hay token, no se puede conectar
+        if (!token.token) {
+          toast.error('Connection failed, please verfiy your credentials')
+          return
         }
+
+        fetchCampaigns(url, token.token)
       }
     }
     fetchData()

@@ -13,9 +13,11 @@ import {
 } from '@chakra-ui/react'
 import { useTranslate } from '@tolgee/react'
 import { useKpitalConnection } from '../hooks/useExternalServerConnection'
+import { useToast } from '@/hooks/useToast'
 
 export const SyncDataFlowForm = ({ workspaceId }: { workspaceId: string }) => {
   const { t } = useTranslate()
+  const { showToast } = useToast()
 
   const {
     inputs,
@@ -25,6 +27,7 @@ export const SyncDataFlowForm = ({ workspaceId }: { workspaceId: string }) => {
     setInputsFields,
     handleInputChange,
     createNewConnection,
+    isValidConecctionParams,
     updateExistingConnection,
   } = useKpitalConnection(workspaceId)
 
@@ -40,6 +43,18 @@ export const SyncDataFlowForm = ({ workspaceId }: { workspaceId: string }) => {
   }, [connections, setInputsFields, workspaceId])
 
   const handleSaveUpdateConnection = async () => {
+    const isValid = await isValidConecctionParams(
+      inputs.url_backend,
+      inputs.user,
+      inputs.password
+    )
+    if (!isValid) {
+      showToast({
+        description: 'Connection params are not valid',
+        status: 'error',
+      })
+      return
+    }
     if (isEditing) {
       await updateExistingConnection(connections[0].id, {
         workspaceId: workspaceId,

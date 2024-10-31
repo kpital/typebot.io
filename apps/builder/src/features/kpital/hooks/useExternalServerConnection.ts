@@ -3,6 +3,7 @@ import { useState, useCallback } from 'react'
 import { useToast } from '@/hooks/useToast'
 import { CreateConnectionInput } from '../types/types'
 import { validateUrl } from '../utils/validateUrl'
+import { useAuthKpital } from '../hooks/useAuthKpital'
 
 export const useKpitalConnection = (workspaceId: string) => {
   const { showToast } = useToast()
@@ -14,6 +15,7 @@ export const useKpitalConnection = (workspaceId: string) => {
     password: '',
     workspaceId: '',
   })
+  const { getToken } = useAuthKpital()
 
   const {
     data: connections,
@@ -110,6 +112,18 @@ export const useKpitalConnection = (workspaceId: string) => {
     []
   )
 
+  const isValidConecctionParams = async (
+    bassUrl: string,
+    user: string,
+    password: string
+  ) => {
+    if (!bassUrl || !user || !password) {
+      return false
+    }
+    const response = await getToken(bassUrl, user, password)
+    return response.token !== null
+  }
+
   return {
     inputs,
     errors,
@@ -119,6 +133,7 @@ export const useKpitalConnection = (workspaceId: string) => {
     setInputsFields,
     handleInputChange,
     createNewConnection,
+    isValidConecctionParams,
     updateExistingConnection,
   }
 }
