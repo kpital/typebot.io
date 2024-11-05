@@ -1,17 +1,16 @@
 import { createAction, option } from '@typebot.io/forge'
 
-export const getStatusUser = createAction({
-  name: 'Get Status User',
+export const recoveryUser = createAction({
+  name: 'Recovery User',
   options: option.object({
-    dniUser: option.string.layout({
-      label: 'DNI User',
-      isRequired: false,
-      placeholder: 'DNI User',
+    recovery_by: option.enum(['dni', 'phone', 'email']).layout({
+      direction: 'row',
+      defaultValue: 'dni',
     }),
-    phoneUser: option.string.layout({
-      label: 'Phone User',
+    value: option.string.layout({
+      label: 'Recovery value',
       isRequired: false,
-      placeholder: 'Phone User',
+      placeholder: 'Recovery value',
     }),
   }),
 })
