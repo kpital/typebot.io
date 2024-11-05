@@ -52,7 +52,11 @@ const IntegrationBlockTypeVisible = [
   IntegrationBlockType.EMAIL,
 ]
 // Visible forged blocks. Kpital
-const forgedBlocksVisible = [forgedBlocks.openai, forgedBlocks.transferagent]
+const forgedBlocksVisible = [
+  forgedBlocks.openai,
+  forgedBlocks.transferagent,
+  forgedBlocks['recovery-user'],
+]
 
 export const BlocksSideBar = () => {
   const { t } = useTranslate()

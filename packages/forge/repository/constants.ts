@@ -16,4 +16,5 @@ export const forgedBlockIds = [
   'segment',
   'groq',
   'transferagent',
+  'recovery-user',
 ] as const satisfies ForgedBlock['type'][]

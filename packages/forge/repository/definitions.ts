@@ -13,6 +13,7 @@ import { nocodbBlock } from '@typebot.io/nocodb-block'
 import { segmentBlock } from '@typebot.io/segment-block'
 import { groqBlock } from '@typebot.io/groq-block'
 import { transferagentBlock } from '@typebot.io/transferagent-block'
+import { recoveryUserBlock } from '@typebot.io/recovery-user-block'
 
 export const forgedBlocks = {
   [openAIBlock.id]: openAIBlock,
@@ -29,4 +30,5 @@ export const forgedBlocks = {
   [segmentBlock.id]: segmentBlock,
   [groqBlock.id]: groqBlock,
   [transferagentBlock.id]: transferagentBlock,
+  [recoveryUserBlock.id]: recoveryUserBlock,
 }

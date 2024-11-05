@@ -1619,6 +1619,24 @@ importers:
         specifier: 5.4.5
         version: 5.4.5
 
+  packages/forge/blocks/recoveryUser:
+    devDependencies:
+      '@typebot.io/forge':
+        specifier: workspace:*
+        version: link:../../core
+      '@typebot.io/lib':
+        specifier: workspace:*
+        version: link:../../../lib
+      '@typebot.io/tsconfig':
+        specifier: workspace:*
+        version: link:../../../tsconfig
+      '@types/react':
+        specifier: 18.2.15
+        version: 18.2.15
+      typescript:
+        specifier: 5.4.5
+        version: 5.4.5
+
   packages/forge/blocks/segment:
     dependencies:
       '@segment/analytics-node':
@@ -1752,6 +1770,9 @@ importers:
       '@typebot.io/qrcode-block':
         specifier: workspace:*
         version: link:../blocks/qrcode
+      '@typebot.io/recovery-user-block':
+        specifier: workspace:*
+        version: link:../blocks/recoveryUser
       '@typebot.io/segment-block':
         specifier: workspace:*
         version: link:../blocks/segment
