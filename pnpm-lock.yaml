@@ -1474,6 +1474,24 @@ importers:
         specifier: 5.4.5
         version: 5.4.5
 
+  packages/forge/blocks/intentionResponse:
+    devDependencies:
+      '@typebot.io/forge':
+        specifier: workspace:*
+        version: link:../../core
+      '@typebot.io/lib':
+        specifier: workspace:*
+        version: link:../../../lib
+      '@typebot.io/tsconfig':
+        specifier: workspace:*
+        version: link:../../../tsconfig
+      '@types/react':
+        specifier: 18.2.15
+        version: 18.2.15
+      typescript:
+        specifier: 5.4.5
+        version: 5.4.5
+
   packages/forge/blocks/mistral:
     dependencies:
       '@ai-sdk/mistral':
@@ -1755,6 +1773,9 @@ importers:
       '@typebot.io/groq-block':
         specifier: workspace:*
         version: link:../blocks/groq
+      '@typebot.io/intention-response-block':
+        specifier: workspace:*
+        version: link:../blocks/intentionResponse
       '@typebot.io/mistral-block':
         specifier: workspace:*
         version: link:../blocks/mistral

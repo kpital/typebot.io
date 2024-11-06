@@ -56,6 +56,7 @@ const forgedBlocksVisible = [
   forgedBlocks.openai,
   forgedBlocks.transferagent,
   forgedBlocks['recovery-user'],
+  forgedBlocks['intention-response'],
 ]
 
 export const BlocksSideBar = () => {

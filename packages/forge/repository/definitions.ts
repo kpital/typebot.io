@@ -14,6 +14,7 @@ import { segmentBlock } from '@typebot.io/segment-block'
 import { groqBlock } from '@typebot.io/groq-block'
 import { transferagentBlock } from '@typebot.io/transferagent-block'
 import { recoveryUserBlock } from '@typebot.io/recovery-user-block'
+import { intentionResponseBlock } from '@typebot.io/intention-response-block'
 
 export const forgedBlocks = {
   [openAIBlock.id]: openAIBlock,
@@ -31,4 +32,5 @@ export const forgedBlocks = {
   [groqBlock.id]: groqBlock,
   [transferagentBlock.id]: transferagentBlock,
   [recoveryUserBlock.id]: recoveryUserBlock,
+  [intentionResponseBlock.id]: intentionResponseBlock,
 }

@@ -29,6 +29,8 @@ import { transferagentBlock } from '@typebot.io/transferagent-block'
 import { transferagentBlockSchema } from '@typebot.io/transferagent-block/schemas'
 import { recoveryUserBlock } from '@typebot.io/recovery-user-block'
 import { recoveryUserBlockSchema } from '@typebot.io/recovery-user-block/schemas'
+import { intentionResponseBlock } from '@typebot.io/intention-response-block'
+import { intentionResponseBlockSchema } from '@typebot.io/intention-response-block/schemas'
 
 export const forgedBlockSchemas = {
   [openAIBlock.id]: openAIBlockSchema,
@@ -46,4 +48,5 @@ export const forgedBlockSchemas = {
   [groqBlock.id]: groqBlockSchema,
   [transferagentBlock.id]: transferagentBlockSchema,
   [recoveryUserBlock.id]: recoveryUserBlockSchema,
+  [intentionResponseBlock.id]: intentionResponseBlockSchema,
 }
