@@ -57,6 +57,7 @@ const forgedBlocksVisible = [
   forgedBlocks.transferagent,
   forgedBlocks['recovery-user'],
   forgedBlocks['intention-response'],
+  forgedBlocks['sms'],
 ]
 
 export const BlocksSideBar = () => {
