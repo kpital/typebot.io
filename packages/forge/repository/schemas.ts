@@ -33,6 +33,8 @@ import { intentionResponseBlock } from '@typebot.io/intention-response-block'
 import { intentionResponseBlockSchema } from '@typebot.io/intention-response-block/schemas'
 import { smsBlock } from '@typebot.io/sms-block'
 import { smsBlockSchema } from '@typebot.io/sms-block/schemas'
+import { callPhoneBlock } from '@typebot.io/call-phone-block'
+import { callPhoneBlockSchema } from '@typebot.io/call-phone-block/schemas'
 
 export const forgedBlockSchemas = {
   [openAIBlock.id]: openAIBlockSchema,
@@ -52,4 +54,5 @@ export const forgedBlockSchemas = {
   [recoveryUserBlock.id]: recoveryUserBlockSchema,
   [intentionResponseBlock.id]: intentionResponseBlockSchema,
   [smsBlock.id]: smsBlockSchema,
+  [callPhoneBlock.id]: callPhoneBlockSchema,
 }

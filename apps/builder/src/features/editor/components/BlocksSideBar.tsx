@@ -58,6 +58,7 @@ const forgedBlocksVisible = [
   forgedBlocks['recovery-user'],
   forgedBlocks['intention-response'],
   forgedBlocks['sms'],
+  forgedBlocks['call-phone'],
 ]
 
 export const BlocksSideBar = () => {

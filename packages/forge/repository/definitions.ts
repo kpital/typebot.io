@@ -16,6 +16,7 @@ import { transferagentBlock } from '@typebot.io/transferagent-block'
 import { recoveryUserBlock } from '@typebot.io/recovery-user-block'
 import { intentionResponseBlock } from '@typebot.io/intention-response-block'
 import { smsBlock } from '@typebot.io/sms-block'
+import { callPhoneBlock } from '@typebot.io/call-phone-block'
 
 export const forgedBlocks = {
   [openAIBlock.id]: openAIBlock,
@@ -35,4 +36,5 @@ export const forgedBlocks = {
   [recoveryUserBlock.id]: recoveryUserBlock,
   [intentionResponseBlock.id]: intentionResponseBlock,
   [smsBlock.id]: smsBlock,
+  [callPhoneBlock.id]: callPhoneBlock,
 }

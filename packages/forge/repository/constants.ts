@@ -19,4 +19,5 @@ export const forgedBlockIds = [
   'recovery-user',
   'intention-response',
   'sms',
+  'call-phone',
 ] as const satisfies ForgedBlock['type'][]

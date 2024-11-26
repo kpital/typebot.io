@@ -23,6 +23,7 @@
     "@typebot.io/transferagent-block": "workspace:*",
     "@typebot.io/recovery-user-block": "workspace:*",
     "@typebot.io/intention-response-block": "workspace:*",
-    "@typebot.io/sms-block": "workspace:*"
+    "@typebot.io/sms-block": "workspace:*",
+    "@typebot.io/call-phone-block": "workspace:*"
   }
 }
