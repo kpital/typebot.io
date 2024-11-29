@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 
 import { useTranslate } from '@tolgee/react'
 import {
@@ -22,6 +22,8 @@ import { useCampaigns } from '@/features/kpital/hooks/useCampaigns'
 import { useAuthKpital } from '../hooks/useAuthKpital'
 import { useToast } from '@/hooks/useToast'
 
+import { SyncDataFlowForm } from './SyncDataFlowForm'
+
 type SyncDataFlowProps = {
   isOpen: boolean
   workspaceId: string
@@ -40,6 +42,8 @@ export const SyncDataFlowDialog = ({
   const { fetchCampaigns, campaigns } = useCampaigns()
   const { getToken } = useAuthKpital()
   const { showToast } = useToast()
+
+  const [updateConnection, setUpdateConnection] = useState(false)
 
   useEffect(() => {
     const fetchData = async () => {
@@ -66,6 +70,10 @@ export const SyncDataFlowDialog = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [connections])
 
+  const handleUpdateConnection = () => {
+    setUpdateConnection(!updateConnection)
+  }
+
   return (
     <>
       <Modal isOpen={isOpen} onClose={onClose}>
@@ -75,7 +83,7 @@ export const SyncDataFlowDialog = ({
           <ModalCloseButton />
           <ModalBody>
             <VStack spacing={8}>
-              {campaigns.length > 0 && (
+              {!updateConnection ? (
                 <FormControl isRequired>
                   <FormLabel>
                     {t('SyncDataFlowDialog.campaignId.label')}
@@ -95,16 +103,28 @@ export const SyncDataFlowDialog = ({
                     ))}
                   </Select>
                 </FormControl>
+              ) : (
+                <div>
+                  <SyncDataFlowForm
+                    workspaceId={workspaceId}
+                    onUpdated={handleUpdateConnection}
+                  />
+                </div>
               )}
             </VStack>
           </ModalBody>
           <ModalFooter>
+            <Button colorScheme="gray" mr={3} onClick={handleUpdateConnection}>
+              {updateConnection
+                ? t('SyncDataFlowDialog.cancelButton.label')
+                : t('SyncDataFlowDialog.updateConfigButton.label')}
+            </Button>
             <Button
               colorScheme="blue"
               mr={3}
               onClick={handleSubmit}
               isLoading={isLoading}
-              isDisabled={!inputs.campaignId}
+              isDisabled={!inputs.campaignId || updateConnection}
             >
               {t('SyncDataFlowDialog.submitButton.label')}
             </Button>

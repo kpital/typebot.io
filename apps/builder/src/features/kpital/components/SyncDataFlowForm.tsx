@@ -15,7 +15,13 @@ import { useTranslate } from '@tolgee/react'
 import { useKpitalConnection } from '../hooks/useExternalServerConnection'
 import { useToast } from '@/hooks/useToast'
 
-export const SyncDataFlowForm = ({ workspaceId }: { workspaceId: string }) => {
+export const SyncDataFlowForm = ({
+  workspaceId,
+  onUpdated,
+}: {
+  workspaceId: string
+  onUpdated?: () => void
+}) => {
   const { t } = useTranslate()
   const { showToast } = useToast()
 
@@ -69,6 +75,10 @@ export const SyncDataFlowForm = ({ workspaceId }: { workspaceId: string }) => {
         user: inputs.user,
         password: inputs.password,
       })
+    }
+
+    if (onUpdated) {
+      onUpdated()
     }
   }
 
