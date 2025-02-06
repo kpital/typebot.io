@@ -8,6 +8,7 @@ import { PhoneInputSettings } from "@/features/blocks/inputs/phone/components/Ph
 import { PictureChoiceSettings } from "@/features/blocks/inputs/pictureChoice/components/PictureChoiceSettings";
 import { RatingInputSettings } from "@/features/blocks/inputs/rating/components/RatingInputSettings";
 import { TextInputSettings } from "@/features/blocks/inputs/textInput/components/TextInputSettings";
+import { TimeInputSettings } from "@/features/blocks/inputs/time/components/TimeInputSettings";
 import { UrlInputSettings } from "@/features/blocks/inputs/url/components/UrlInputSettings";
 import { ChatwootSettings } from "@/features/blocks/integrations/chatwoot/components/ChatwootSettings";
 import { GoogleAnalyticsSettings } from "@/features/blocks/integrations/googleAnalytics/components/GoogleAnalyticsSettings";
@@ -62,8 +63,8 @@ type Props = {
 
 export const SettingsPopoverContent = ({ onExpandClick, ...props }: Props) => {
   const [isHovering, setIsHovering] = useState(false);
-  const arrowColor = useColorModeValue("white", "gray.800");
-  const { blockDef } = useForgedBlock(props.block.type);
+  const arrowColor = useColorModeValue("white", "gray.900");
+  const { blockDef } = useForgedBlock({ blockType: props.block.type });
   const ref = useRef<HTMLDivElement | null>(null);
   const handleMouseDown = (e: React.MouseEvent) => e.stopPropagation();
 
@@ -87,7 +88,7 @@ export const SettingsPopoverContent = ({ onExpandClick, ...props }: Props) => {
               overflowY="auto"
               maxH="400px"
               ref={ref}
-              shadow="lg"
+              shadow="md"
               onMouseEnter={() => setIsHovering(true)}
               onMouseLeave={() => setIsHovering(false)}
             >
@@ -173,6 +174,14 @@ export const BlockSettings = ({
     case InputBlockType.DATE: {
       return (
         <DateInputSettings
+          options={block.options}
+          onOptionsChange={updateOptions}
+        />
+      );
+    }
+    case InputBlockType.TIME: {
+      return (
+        <TimeInputSettings
           options={block.options}
           onOptionsChange={updateOptions}
         />

@@ -1,24 +1,25 @@
 import type { Block } from "@typebot.io/blocks-core/schemas/schema";
 import { InputBlockType } from "@typebot.io/blocks-inputs/constants";
 import { continueBotFlow } from "@typebot.io/bot-engine/continueBotFlow";
-import { getSession } from "@typebot.io/bot-engine/queries/getSession";
-import { setIsReplyingInChatSession } from "@typebot.io/bot-engine/queries/setIsReplyingInChatSession";
 import { saveStateToDatabase } from "@typebot.io/bot-engine/saveStateToDatabase";
-import type { Message } from "@typebot.io/bot-engine/schemas/api";
-import type {
-  ChatSession,
-  SessionState,
-} from "@typebot.io/bot-engine/schemas/chatSession";
+import type { ChatSession, Message } from "@typebot.io/bot-engine/schemas/api";
+import { getSession } from "@typebot.io/chat-session/queries/getSession";
+import { setIsReplyingInChatSession } from "@typebot.io/chat-session/queries/setIsReplyingInChatSession";
+import type { SessionState } from "@typebot.io/chat-session/schemas";
+import { decrypt } from "@typebot.io/credentials/decrypt";
+import { getCredentials } from "@typebot.io/credentials/getCredentials";
+import type { WhatsAppCredentials } from "@typebot.io/credentials/schemas";
 import { env } from "@typebot.io/env";
-import { getBlockById } from "@typebot.io/groups/helpers";
-import { decrypt } from "@typebot.io/lib/api/encryption/decrypt";
+import { getBlockById } from "@typebot.io/groups/helpers/getBlockById";
 import redis from "@typebot.io/lib/redis";
 import { uploadFileToBucket } from "@typebot.io/lib/s3/uploadFileToBucket";
 import { isDefined } from "@typebot.io/lib/utils";
-import prisma from "@typebot.io/prisma";
 import { WhatsAppError } from "./WhatsAppError";
 import { downloadMedia } from "./downloadMedia";
-import type { WhatsAppCredentials, WhatsAppIncomingMessage } from "./schemas";
+import type {
+  WhatsAppIncomingMessage,
+  WhatsAppMessageReferral,
+} from "./schemas";
 import { sendChatReplyToWhatsApp } from "./sendChatReplyToWhatsApp";
 import { startWhatsAppSession } from "./startWhatsAppSession";
 
@@ -31,7 +32,8 @@ type Props = {
   phoneNumberId?: string;
   workspaceId?: string;
   contact?: NonNullable<SessionState["whatsApp"]>["contact"];
-  origin?: "webhook";
+  referral?: WhatsAppMessageReferral;
+  callFrom?: "webhook";
 };
 
 const isMessageTooOld = (receivedMessage: WhatsAppIncomingMessage) => {
@@ -46,6 +48,7 @@ export const resumeWhatsAppFlow = async ({
   credentialsId,
   phoneNumberId,
   contact,
+  callFrom,
 }: Props) => {
   if (isMessageTooOld(receivedMessage))
     throw new WhatsAppError("Message is too old", {
@@ -54,7 +57,11 @@ export const resumeWhatsAppFlow = async ({
 
   const isPreview = workspaceId === undefined || credentialsId === undefined;
 
-  const credentials = await getCredentials({ credentialsId, isPreview });
+  const credentials = await getWhatsAppCredentials({
+    credentialsId,
+    workspaceId,
+    isPreview,
+  });
   if (!credentials) throw new WhatsAppError("Could not find credentials");
 
   if (phoneNumberId && credentials.phoneNumberId !== phoneNumberId)
@@ -81,7 +88,7 @@ export const resumeWhatsAppFlow = async ({
     session?.updatedAt.getTime() + session.state.expiryTimeout < Date.now();
 
   if (aggregationResponse.status === "treat as unique message") {
-    if (session?.isReplying && origin !== "webhook") {
+    if (session?.isReplying && callFrom !== "webhook") {
       if (!isSessionExpired) throw new WhatsAppError("Is in reply state");
     } else {
       await setIsReplyingInChatSession({
@@ -250,6 +257,7 @@ const convertWhatsAppMessageToTypebotMessage = async ({
         break;
       }
       case "webhook": {
+        if (!message.webhook.data) return;
         text = message.webhook.data;
       }
     }
@@ -262,11 +270,14 @@ const convertWhatsAppMessageToTypebotMessage = async ({
   };
 };
 
-const getCredentials = async ({
+const getWhatsAppCredentials = async ({
   credentialsId,
+  workspaceId,
   isPreview,
 }: {
   credentialsId?: string;
+  // TO-DO: Remove workspaceId optionnality when deployed
+  workspaceId?: string;
   isPreview: boolean;
 }): Promise<WhatsAppCredentials["data"] | undefined> => {
   if (isPreview) {
@@ -283,15 +294,7 @@ const getCredentials = async ({
 
   if (!credentialsId) return;
 
-  const credentials = await prisma.credentials.findUnique({
-    where: {
-      id: credentialsId,
-    },
-    select: {
-      data: true,
-      iv: true,
-    },
-  });
+  const credentials = await getCredentials(credentialsId, workspaceId);
   if (!credentials) return;
   const data = (await decrypt(
     credentials.data,
@@ -370,6 +373,7 @@ const resumeFlowAndSendWhatsAppMessages = async (props: {
   sessionId: string;
   reply: Message | undefined;
   contact?: NonNullable<SessionState["whatsApp"]>["contact"];
+  referral?: WhatsAppMessageReferral;
   credentials: WhatsAppCredentials["data"];
   isSessionExpired: boolean | null;
   credentialsId?: string;
@@ -423,12 +427,14 @@ const resumeFlow = ({
   isSessionExpired,
   reply,
   contact,
+  referral,
   credentials,
   credentialsId,
   workspaceId,
 }: {
   reply: Message | undefined;
   contact?: NonNullable<SessionState["whatsApp"]>["contact"];
+  referral?: WhatsAppMessageReferral;
   session: Pick<ChatSession, "state"> | null;
   credentials: WhatsAppCredentials["data"];
   isSessionExpired: boolean | null;
@@ -439,7 +445,18 @@ const resumeFlow = ({
     return continueBotFlow(reply, {
       version: 2,
       state: contact
-        ? { ...session.state, whatsApp: { contact } }
+        ? {
+            ...session.state,
+            whatsApp: {
+              contact,
+              referral: referral
+                ? {
+                    sourceId: referral.source_id,
+                    ctwaClickId: referral.ctwa_clid,
+                  }
+                : undefined,
+            },
+          }
         : session.state,
       textBubbleContentFormat: "richText",
     });
@@ -452,5 +469,6 @@ const resumeFlow = ({
     workspaceId,
     credentials: { ...credentials, id: credentialsId as string },
     contact,
+    referral,
   });
 };

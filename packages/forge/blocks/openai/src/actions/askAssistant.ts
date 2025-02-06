@@ -1,3 +1,4 @@
+import { formatDataStreamPart, processDataStream } from "@ai-sdk/ui-utils";
 import { createAction, option } from "@typebot.io/forge";
 import type {
   AsyncVariableStore,
@@ -7,12 +8,10 @@ import type {
 import { safeStringify } from "@typebot.io/lib/safeStringify";
 import { isDefined, isEmpty, isNotEmpty } from "@typebot.io/lib/utils";
 import { executeFunction } from "@typebot.io/variables/executeFunction";
-import { readDataStream } from "ai";
 import { type ClientOptions, OpenAI } from "openai";
 import { auth } from "../auth";
 import { baseOptions } from "../baseOptions";
 import { deprecatedAskAssistantOptions } from "../deprecated";
-import { AssistantStream } from "../helpers/AssistantStream";
 import { isModelCompatibleWithVision } from "../helpers/isModelCompatibleWithVision";
 import { splitUserTextMessageIntoOpenAIBlocks } from "../helpers/splitUserTextMessageIntoOpenAIBlocks";
 
@@ -57,6 +56,11 @@ export const askAssistant = createAction({
           }),
         )
         .layout({ accordion: "Functions", itemLabel: "function" }),
+      additionalInstructions: option.string.layout({
+        label: "Additional Instructions",
+        inputType: "textarea",
+        accordion: "Advanced settings",
+      }),
       responseMapping: option
         .saveResponseArray(["Message", "Thread ID"] as const, {
           item: { hiddenItems: ["Thread ID"] },
@@ -158,6 +162,7 @@ export const askAssistant = createAction({
           variables,
           functions: options.functions,
           responseMapping: options.responseMapping,
+          additionalInstructions: options.additionalInstructions,
         }),
       }),
     },
@@ -172,6 +177,7 @@ export const askAssistant = createAction({
         threadId,
         threadVariableId,
         functions,
+        additionalInstructions,
       },
       variables,
       logs,
@@ -187,25 +193,35 @@ export const askAssistant = createAction({
         variables,
         threadId,
         functions,
+        additionalInstructions,
       });
 
-      if (!stream) return;
+      if (!stream) {
+        logs.add("createAssistantStream returned undefined");
+        return;
+      }
 
       let writingMessage = "";
 
-      for await (const { type, value } of readDataStream(stream.getReader())) {
-        if (type === "text") {
-          writingMessage += value;
-        }
-      }
+      await processDataStream({
+        stream,
+        onTextPart: (text) => {
+          writingMessage += text;
+        },
+        onErrorPart: (error) => {
+          logs?.add(error);
+        },
+      });
 
       responseMapping?.forEach((mapping) => {
         if (!mapping.variableId) return;
         if (!mapping.item || mapping.item === "Message") {
-          variables.set(
-            mapping.variableId,
-            writingMessage.replace(/【.+】/g, ""),
-          );
+          variables.set([
+            {
+              id: mapping.variableId,
+              value: writingMessage.replace(/【.+】/g, ""),
+            },
+          ]);
         }
       });
     },
@@ -224,6 +240,7 @@ const createAssistantStream = async ({
   threadId,
   functions,
   responseMapping,
+  additionalInstructions,
 }: {
   apiKey?: string;
   assistantId?: string;
@@ -233,13 +250,14 @@ const createAssistantStream = async ({
   threadVariableId?: string;
   threadId?: string;
   functions?: { name?: string; code?: string }[];
+  additionalInstructions?: string;
   responseMapping?: {
     item?: "Thread ID" | "Message" | undefined;
     variableId?: string | undefined;
   }[];
   logs?: LogsStore;
   variables: AsyncVariableStore | VariableStore;
-}): Promise<ReadableStream | undefined> => {
+}): Promise<ReadableStream<any> | undefined> => {
   if (isEmpty(assistantId)) {
     logs?.add("Assistant ID is empty");
     return;
@@ -278,9 +296,11 @@ const createAssistantStream = async ({
       (mapping) => mapping.item === "Thread ID",
     );
     if (threadIdResponseMapping?.variableId)
-      await variables.set(threadIdResponseMapping.variableId, currentThreadId);
+      await variables.set([
+        { id: threadIdResponseMapping.variableId, value: currentThreadId },
+      ]);
     else if (threadVariableId)
-      await variables.set(threadVariableId, currentThreadId);
+      await variables.set([{ id: threadVariableId, value: currentThreadId }]);
   }
 
   if (!currentThreadId) {
@@ -290,70 +310,122 @@ const createAssistantStream = async ({
 
   const assistant = await openai.beta.assistants.retrieve(assistantId);
 
-  // Add a message to the thread
-  const createdMessage = await openai.beta.threads.messages.create(
-    currentThreadId,
-    {
-      role: "user",
-      content: isModelCompatibleWithVision(assistant.model)
-        ? await splitUserTextMessageIntoOpenAIBlocks(message)
-        : message,
-    },
-  );
-  return AssistantStream(
-    { threadId: currentThreadId, messageId: createdMessage.id },
-    async ({ forwardStream }) => {
-      if (!currentThreadId) return;
-      const runStream = openai.beta.threads.runs.stream(currentThreadId, {
-        assistant_id: assistantId,
-      });
+  await openai.beta.threads.messages.create(currentThreadId, {
+    role: "user",
+    content: isModelCompatibleWithVision(assistant.model)
+      ? await splitUserTextMessageIntoOpenAIBlocks(message)
+      : message,
+  });
 
-      let runResult = await forwardStream(runStream);
+  return createAssistantFoundationalStream(async ({ forwardStream }) => {
+    if (!currentThreadId) return;
+    const runStream = openai.beta.threads.runs.stream(currentThreadId, {
+      assistant_id: assistantId,
+      additional_instructions: additionalInstructions,
+    });
 
-      while (
-        runResult?.status === "requires_action" &&
-        runResult.required_action?.type === "submit_tool_outputs"
-      ) {
-        const tool_outputs = (
-          await Promise.all(
-            runResult.required_action.submit_tool_outputs.tool_calls.map(
-              async (toolCall) => {
-                const parameters = JSON.parse(toolCall.function.arguments);
+    let runResult = await forwardStream(runStream);
 
-                const functionToExecute = functions?.find(
-                  (f) => f.name === toolCall.function.name,
-                );
-                if (!functionToExecute) return;
+    while (
+      runResult?.status === "requires_action" &&
+      runResult.required_action?.type === "submit_tool_outputs"
+    ) {
+      const tool_outputs = (
+        await Promise.all(
+          runResult.required_action.submit_tool_outputs.tool_calls.map(
+            async (toolCall: any) => {
+              const parameters = JSON.parse(toolCall.function.arguments);
 
-                const name = toolCall.function.name;
-                if (!name || !functionToExecute.code) return;
+              const functionToExecute = functions?.find(
+                (f) => f.name === toolCall.function.name,
+              );
+              if (!functionToExecute) return;
 
-                const { output, newVariables } = await executeFunction({
-                  variables: variables.list(),
-                  body: functionToExecute.code,
-                  args: parameters,
-                });
+              const name = toolCall.function.name;
+              if (!name || !functionToExecute.code) return;
 
-                for (const variable of newVariables ?? []) {
-                  await variables.set(variable.id, variable.value);
-                }
+              const { output, newVariables } = await executeFunction({
+                variables: variables.list(),
+                body: functionToExecute.code,
+                args: parameters,
+              });
 
-                return {
-                  tool_call_id: toolCall.id,
-                  output: safeStringify(output) ?? "",
-                };
-              },
-            ),
-          )
-        ).filter(isDefined);
-        runResult = await forwardStream(
-          openai.beta.threads.runs.submitToolOutputsStream(
-            currentThreadId,
-            runResult.id,
-            { tool_outputs },
+              if (newVariables && newVariables.length > 0)
+                await variables.set(newVariables);
+
+              return {
+                tool_call_id: toolCall.id,
+                output: safeStringify(output) ?? "",
+              };
+            },
           ),
+        )
+      ).filter(isDefined);
+      runResult = await forwardStream(
+        openai.beta.threads.runs.submitToolOutputsStream(
+          currentThreadId,
+          runResult.id,
+          { tool_outputs },
+        ),
+      );
+    }
+  });
+};
+
+const createAssistantFoundationalStream = (
+  process: ({
+    forwardStream,
+  }: { forwardStream: (stream: any) => Promise<any> }) => Promise<void>,
+) =>
+  new ReadableStream({
+    async start(controller) {
+      const textEncoder = new TextEncoder();
+
+      const sendError = (errorMessage: string) => {
+        controller.enqueue(
+          textEncoder.encode(formatDataStreamPart("error", errorMessage)),
         );
+      };
+
+      const forwardStream = async (stream: any) => {
+        let result: any | undefined = undefined;
+
+        for await (const value of stream) {
+          switch (value.event) {
+            case "thread.message.delta": {
+              const content = value.data.delta.content?.[0];
+
+              if (content?.type === "text" && content.text?.value != null) {
+                controller.enqueue(
+                  textEncoder.encode(
+                    formatDataStreamPart("text", content.text.value),
+                  ),
+                );
+              }
+              break;
+            }
+
+            case "thread.run.completed":
+            case "thread.run.requires_action": {
+              result = value.data;
+              break;
+            }
+          }
+        }
+
+        return result;
+      };
+
+      try {
+        await process({
+          forwardStream,
+        });
+      } catch (error) {
+        sendError((error as any).message ?? `${error}`);
+      } finally {
+        controller.close();
       }
     },
-  );
-};
+    pull() {},
+    cancel() {},
+  });

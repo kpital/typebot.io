@@ -1,4 +1,4 @@
-import { useUser } from "@/features/account/hooks/useUser";
+import { useUser } from "@/features/user/hooks/useUser";
 import { useWorkspace } from "@/features/workspace/WorkspaceProvider";
 import { useToast } from "@/hooks/useToast";
 import { trpc } from "@/lib/trpc";
@@ -12,7 +12,7 @@ import {
   ModalHeader,
   ModalOverlay,
 } from "@chakra-ui/react";
-import type { SmtpCredentials } from "@typebot.io/blocks-integrations/sendEmail/schema";
+import type { SmtpCredentials } from "@typebot.io/credentials/schemas";
 import { isNotDefined } from "@typebot.io/lib/utils";
 import type React from "react";
 import { useState } from "react";
@@ -102,8 +102,9 @@ export const SmtpCreateModalContent = ({
         data: smtpConfig,
         name: smtpConfig.from.email as string,
         type: "smtp",
-        workspaceId: workspace.id,
       },
+      scope: "workspace",
+      workspaceId: workspace.id,
     });
   };
   return (
@@ -118,7 +119,7 @@ export const SmtpCreateModalContent = ({
         <ModalFooter>
           <Button
             type="submit"
-            colorScheme="blue"
+            colorScheme="orange"
             isDisabled={
               isNotDefined(smtpConfig.from.email) ||
               isNotDefined(smtpConfig.host) ||

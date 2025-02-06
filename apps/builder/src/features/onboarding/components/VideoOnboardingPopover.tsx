@@ -1,5 +1,5 @@
 import { CloseIcon, VideoPopoverIcon } from "@/components/icons";
-import { useUser } from "@/features/account/hooks/useUser";
+import { useUser } from "@/features/user/hooks/useUser";
 import {
   IconButton,
   type IconButtonProps,
@@ -65,7 +65,7 @@ const TriggerIconButton = (props: Omit<IconButtonProps, "aria-label">) => (
     icon={<VideoPopoverIcon />}
     aria-label={"Open Bubbles help video"}
     variant="ghost"
-    colorScheme="blue"
+    colorScheme="orange"
     {...props}
   />
 );

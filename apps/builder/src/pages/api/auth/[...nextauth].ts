@@ -65,6 +65,7 @@ if (env.NEXT_PUBLIC_SMTP_FROM && !env.SMTP_AUTH_DISABLED)
         host: env.SMTP_HOST,
         port: env.SMTP_PORT,
         secure: env.SMTP_SECURE,
+        ignoreTLS: env.SMTP_IGNORE_TLS,
         auth:
           env.SMTP_USERNAME || env.SMTP_PASSWORD
             ? {
@@ -186,8 +187,14 @@ export const getAuthOptions = ({
     signIn({ user }) {
       Sentry.setUser({ id: user.id });
     },
-    signOut() {
+    async signOut({ session }) {
       Sentry.setUser(null);
+      await trackEvents([
+        {
+          name: "User logged out",
+          userId: (session as unknown as { userId: string }).userId,
+        },
+      ]);
     },
   },
   callbacks: {
@@ -233,6 +240,13 @@ export const getAuthOptions = ({
         const userGroups = await getUserGroups(account);
         return checkHasGroups(userGroups, requiredGroups);
       }
+      if (!isNewUser)
+        await trackEvents([
+          {
+            name: "User logged in",
+            userId: user.id,
+          },
+        ]);
       return true;
     },
   },
@@ -277,12 +291,6 @@ const updateLastActivityDate = async (user: Prisma.User) => {
       where: { id: user.id },
       data: { lastActivityAt: new Date() },
     });
-    await trackEvents([
-      {
-        name: "User logged in",
-        userId: user.id,
-      },
-    ]);
   }
 };
 

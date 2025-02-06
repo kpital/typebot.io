@@ -1,5 +1,5 @@
 import { DownloadIcon, TemplateIcon, ToolIcon } from "@/components/icons";
-import { useUser } from "@/features/account/hooks/useUser";
+import { useUser } from "@/features/user/hooks/useUser";
 import { useWorkspace } from "@/features/workspace/WorkspaceProvider";
 import { useToast } from "@/hooks/useToast";
 import { trpc } from "@/lib/trpc";
@@ -69,7 +69,10 @@ export const CreateNewTypebotButtons = () => {
     },
   });
 
-  const handleCreateSubmit = async (typebot?: Typebot) => {
+  const handleCreateSubmit = async (
+    typebot?: Typebot,
+    fromTemplate?: string,
+  ) => {
     if (!user || !workspace) return;
     const folderId = router.query.folderId?.toString() ?? null;
     if (typebot)
@@ -79,6 +82,7 @@ export const CreateNewTypebotButtons = () => {
           ...typebot,
           folderId,
         },
+        fromTemplate,
       });
     else
       createTypebot({

@@ -1,12 +1,11 @@
 import { TextLink } from "@/components/TextLink";
-import { useUser } from "@/features/account/hooks/useUser";
 import { ParentModalProvider } from "@/features/graph/providers/ParentModalProvider";
+import { useUser } from "@/features/user/hooks/useUser";
 import type { WorkspaceInApp } from "@/features/workspace/WorkspaceProvider";
 import { useToast } from "@/hooks/useToast";
 import { trpc } from "@/lib/trpc";
 import { HStack, Stack, Text } from "@chakra-ui/react";
 import { useTranslate } from "@tolgee/react";
-import { guessIfUserIsEuropean } from "@typebot.io/billing/helpers/guessIfUserIsEuropean";
 import { Plan, WorkspaceRole } from "@typebot.io/prisma/enum";
 import { useState } from "react";
 import type { PreCheckoutModalProps } from "./PreCheckoutModal";
@@ -68,9 +67,6 @@ export const ChangePlanForm = ({
     const newSubscription = {
       plan,
       workspaceId: workspace.id,
-      currency:
-        data?.subscription?.currency ??
-        (guessIfUserIsEuropean() ? "eur" : "usd"),
     } as const;
     if (workspace.stripeId) {
       updateSubscription({

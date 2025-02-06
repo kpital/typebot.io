@@ -4,6 +4,7 @@ import {
   sessionOnlySetVariableOptions,
 } from "@typebot.io/blocks-logic/setVariable/constants";
 import type { SetVariableBlock } from "@typebot.io/blocks-logic/setVariable/schema";
+import type { SessionState } from "@typebot.io/chat-session/schemas";
 import { byId, isEmpty, isNotDefined } from "@typebot.io/lib/utils";
 import prisma from "@typebot.io/prisma";
 import type { Answer } from "@typebot.io/results/schemas/answers";
@@ -19,7 +20,6 @@ import {
   computeResultTranscript,
   parseTranscriptMessageText,
 } from "../../../computeResultTranscript";
-import type { SessionState } from "../../../schemas/chatSession";
 import type { ExecuteLogicResponse } from "../../../types";
 import { updateVariablesInSession } from "../../../updateVariablesInSession";
 import { parseScriptToExecuteClientSideAction } from "../script/executeScript";
@@ -80,10 +80,24 @@ export const executeSetVariable = async (
     ...existingVariable,
     value,
   };
+  const saveInErrorVariable =
+    (block.options.type === "Custom" || !block.options.type) &&
+    block.options.isCode &&
+    block.options.saveErrorInVariableId
+      ? variables.find(byId(block.options.saveErrorInVariableId))
+      : undefined;
   const { newSetVariableHistory, updatedState } = updateVariablesInSession({
     state,
     newVariables: [
       ...parseColateralVariableChangeIfAny({ state, options: block.options }),
+      ...(saveInErrorVariable
+        ? [
+            {
+              ...saveInErrorVariable,
+              value: error,
+            },
+          ]
+        : []),
       {
         ...newVariable,
         isSessionVariable: sessionOnlySetVariableOptions.includes(
@@ -132,6 +146,16 @@ const getExpressionToEvaluate =
       case "Phone number": {
         return state.whatsApp?.contact.phoneNumber
           ? { type: "value", value: state.whatsApp.contact.phoneNumber }
+          : null;
+      }
+      case "Referral Click ID": {
+        return state.whatsApp?.referral?.ctwaClickId
+          ? { type: "value", value: state.whatsApp.referral.ctwaClickId }
+          : null;
+      }
+      case "Referral Source ID": {
+        return state.whatsApp?.referral?.sourceId
+          ? { type: "value", value: state.whatsApp.referral.sourceId }
           : null;
       }
       case "Now": {
@@ -428,6 +452,13 @@ const parseColateralVariableChangeIfAny = ({
     (v) => v.id === options.saveItemInVariableId,
   );
   if (!variable || !listVariableValue) return [];
+  if (!Array.isArray(listVariableValue))
+    return [
+      {
+        ...variable,
+        value: [],
+      },
+    ];
   return [
     {
       ...variable,

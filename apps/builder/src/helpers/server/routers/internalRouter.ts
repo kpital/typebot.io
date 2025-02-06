@@ -1,6 +1,8 @@
 import { googleSheetsRouter } from "@/features/blocks/integrations/googleSheets/api/router";
 import { openAIRouter } from "@/features/blocks/integrations/openai/api/router";
+import { credentialsRouter } from "@/features/credentials/api/router";
 import { getAppVersionProcedure } from "@/features/dashboard/api/getAppVersionProcedure";
+import { generateGroupTitle } from "@/features/editor/api/generateGroupTitle";
 import { forgeRouter } from "@/features/forge/api/router";
 import { telemetryRouter } from "@/features/telemetry/api/router";
 import { generateUploadUrl } from "@/features/upload/api/generateUploadUrl";
@@ -15,6 +17,8 @@ export const internalRouter = router({
   forge: forgeRouter,
   sheets: googleSheetsRouter,
   telemetry: telemetryRouter,
+  generateGroupTitle,
+  credentials: credentialsRouter,
 });
 
 export type InternalRouter = typeof internalRouter;

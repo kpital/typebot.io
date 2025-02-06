@@ -1,15 +1,14 @@
 import { LockedIcon, UnlockedIcon } from "@/components/icons";
 import { useBlockDnd } from "@/features/graph/providers/GraphDndProvider";
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import {
   Fade,
   Flex,
+  Heading,
   IconButton,
   Input,
   Portal,
   SimpleGrid,
   Stack,
-  Text,
   Tooltip,
   useColorModeValue,
   useEventListener,
@@ -26,7 +25,7 @@ import { isDefined } from "@typebot.io/lib/utils";
 import type React from "react";
 import { useState } from "react";
 import { useDebouncedCallback } from "use-debounce";
-import { headerHeight } from "../constants";
+import { headerHeight, leftSidebarLockedStorageKey } from "../constants";
 import { BlockCard } from "./BlockCard";
 import { BlockCardOverlay } from "./BlockCardOverlay";
 import {
@@ -50,8 +49,12 @@ export const BlocksSideBar = () => {
     x: 0,
     y: 0,
   });
-  const [isLocked, setIsLocked] = useState(true);
-  const [isExtended, setIsExtended] = useState(true);
+  const [isLocked, setIsLocked] = useState(
+    localStorage.getItem(leftSidebarLockedStorageKey) === "true",
+  );
+  const [isExtended, setIsExtended] = useState(
+    localStorage.getItem(leftSidebarLockedStorageKey) === "true",
+  );
   const [searchInput, setSearchInput] = useState("");
 
   const closeSideBar = useDebouncedCallback(() => setIsExtended(false), 200);
@@ -87,7 +90,14 @@ export const BlocksSideBar = () => {
   };
   useEventListener("mouseup", handleMouseUp);
 
-  const handleLockClick = () => setIsLocked(!isLocked);
+  const handleLockClick = () => {
+    try {
+      localStorage.setItem(leftSidebarLockedStorageKey, String(!isLocked));
+    } catch (error) {
+      console.error(error);
+    }
+    setIsLocked(!isLocked);
+  };
 
   const handleDockBarEnter = () => {
     closeSideBar.flush();
@@ -169,12 +179,11 @@ export const BlocksSideBar = () => {
       <Stack
         w="full"
         rounded="lg"
-        shadow="xl"
         borderWidth="1px"
         pt="4"
         pb="10"
         px="4"
-        bgColor={useColorModeValue("white", "gray.900")}
+        bgColor={useColorModeValue("white", "gray.950")}
         spacing={6}
         userSelect="none"
         overflowY="auto"
@@ -211,9 +220,9 @@ export const BlocksSideBar = () => {
         </Flex>
 
         <Stack>
-          <Text fontSize="sm" fontWeight="semibold">
+          <Heading as="h4" fontSize="sm">
             {t("editor.sidebarBlocks.blockType.bubbles.heading")}
-          </Text>
+          </Heading>
           <SimpleGrid columns={2} spacing="3">
             {filteredBubbleBlockTypes.map((type) => (
               <BlockCard key={type} type={type} onMouseDown={handleMouseDown} />
@@ -222,9 +231,9 @@ export const BlocksSideBar = () => {
         </Stack>
 
         <Stack>
-          <Text fontSize="sm" fontWeight="semibold">
+          <Heading fontSize="sm">
             {t("editor.sidebarBlocks.blockType.inputs.heading")}
-          </Text>
+          </Heading>
           <SimpleGrid columns={2} spacing="3">
             {filteredInputBlockTypes.map((type) => (
               <BlockCard key={type} type={type} onMouseDown={handleMouseDown} />
@@ -233,9 +242,9 @@ export const BlocksSideBar = () => {
         </Stack>
 
         <Stack>
-          <Text fontSize="sm" fontWeight="semibold">
+          <Heading fontSize="sm">
             {t("editor.sidebarBlocks.blockType.logic.heading")}
-          </Text>
+          </Heading>
           <SimpleGrid columns={2} spacing="3">
             {filteredLogicBlockTypes.map((type) => (
               <BlockCard key={type} type={type} onMouseDown={handleMouseDown} />
@@ -244,9 +253,9 @@ export const BlocksSideBar = () => {
         </Stack>
 
         <Stack>
-          <Text fontSize="sm" fontWeight="semibold">
+          <Heading fontSize="sm">
             {t("editor.sidebarBlocks.blockType.integrations.heading")}
-          </Text>
+          </Heading>
           <SimpleGrid columns={2} spacing="3">
             {filteredIntegrationBlockTypes
               .concat(filteredForgedBlockIds as any)

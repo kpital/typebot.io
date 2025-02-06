@@ -3,7 +3,7 @@ import type { SVGProps } from "react";
 
 export type VariableStore = {
   get: (variableId: string) => string | (string | null)[] | null | undefined;
-  set: (variableId: string, value: unknown) => void;
+  set: (variables: { id: string; value: unknown }[]) => void;
   parse: (value: string) => string;
   list: () => {
     id: string;
@@ -13,7 +13,7 @@ export type VariableStore = {
 };
 
 export type AsyncVariableStore = Omit<VariableStore, "set"> & {
-  set: (variableId: string, value: unknown) => Promise<void>;
+  set: (variables: { id: string; value: unknown }[]) => Promise<void>;
 };
 
 export type LogsStore = {
@@ -47,10 +47,23 @@ export type ActionDefinition<
   Options extends z.ZodObject<z.ZodRawShape> = z.ZodObject<{}>,
 > = {
   name: string;
+  parseBlockNodeLabel?: (
+    options: z.infer<BaseOptions> & z.infer<Options>,
+  ) => string;
   fetchers?: FetcherDefinition<A, z.infer<BaseOptions> & z.infer<Options>>[];
   options?: Options;
   turnableInto?: TurnableIntoParam<z.infer<Options>>[];
   getSetVariableIds?: (options: z.infer<Options>) => string[];
+  /**
+   * Used for AI generation in the builder if enabled by the user.
+   */
+  aiGenerate?: {
+    fetcherId: string;
+    getModel: (params: {
+      credentials: CredentialsFromAuthDef<A>;
+      model: string;
+    }) => any;
+  };
   run?: {
     server?: (params: {
       credentials: CredentialsFromAuthDef<A>;

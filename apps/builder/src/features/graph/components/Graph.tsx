@@ -1,13 +1,14 @@
-import { useUser } from "@/features/account/hooks/useUser";
 import { headerHeight } from "@/features/editor/constants";
 import { useTypebot } from "@/features/editor/providers/TypebotProvider";
+import { useUser } from "@/features/user/hooks/useUser";
 import { Fade, Flex, type FlexProps, useEventListener } from "@chakra-ui/react";
 import { createId } from "@paralleldrive/cuid2";
 import type { BlockV6 } from "@typebot.io/blocks-core/schemas/schema";
+import { InputBlockType } from "@typebot.io/blocks-inputs/constants";
 import { GraphNavigation } from "@typebot.io/prisma/enum";
 import type {
+  EdgeWithTotalUsers,
   TotalAnswers,
-  TotalVisitedEdges,
 } from "@typebot.io/schemas/features/analytics";
 import type { PublicTypebotV6 } from "@typebot.io/typebot/schemas/publicTypebot";
 import type { TypebotV6 } from "@typebot.io/typebot/schemas/typebot";
@@ -30,18 +31,18 @@ import { SelectBox } from "./SelectBox";
 import { ZoomButtons } from "./ZoomButtons";
 
 const maxScale = 2;
-const minScale = 0.3;
+const minScale = 0.2;
 const zoomButtonsScaleBlock = 0.2;
 
 export const Graph = ({
   typebot,
   totalAnswers,
-  totalVisitedEdges,
+  edgesWithTotalUsers,
   onUnlockProPlanClick,
   ...props
 }: {
   typebot: TypebotV6 | PublicTypebotV6;
-  totalVisitedEdges?: TotalVisitedEdges[];
+  edgesWithTotalUsers?: EdgeWithTotalUsers[];
   totalAnswers?: TotalAnswers[];
   onUnlockProPlanClick?: () => void;
 } & FlexProps) => {
@@ -161,7 +162,13 @@ export const Graph = ({
     });
     setDraggedBlock(undefined);
     setDraggedBlockType(undefined);
-    if (newBlockId) setOpenedBlockId(newBlockId);
+    if (
+      newBlockId &&
+      draggedBlockType !== InputBlockType.CHOICE &&
+      draggedBlockType !== InputBlockType.PICTURE_CHOICE
+    ) {
+      setOpenedBlockId(newBlockId);
+    }
   };
 
   const handleCaptureMouseDown = (e: MouseEvent) => {
@@ -392,7 +399,7 @@ export const Graph = ({
           groups={typebot.groups}
           events={typebot.events}
           totalAnswers={totalAnswers}
-          totalVisitedEdges={totalVisitedEdges}
+          edgesWithTotalUsers={edgesWithTotalUsers}
           onUnlockProPlanClick={onUnlockProPlanClick}
         />
       </Flex>

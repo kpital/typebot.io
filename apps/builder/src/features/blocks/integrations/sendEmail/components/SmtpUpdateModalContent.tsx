@@ -1,4 +1,4 @@
-import { useUser } from "@/features/account/hooks/useUser";
+import { useUser } from "@/features/user/hooks/useUser";
 import { useWorkspace } from "@/features/workspace/WorkspaceProvider";
 import { useToast } from "@/hooks/useToast";
 import { trpc } from "@/lib/trpc";
@@ -10,7 +10,7 @@ import {
   ModalFooter,
   ModalHeader,
 } from "@chakra-ui/react";
-import type { SmtpCredentials } from "@typebot.io/blocks-integrations/sendEmail/schema";
+import type { SmtpCredentials } from "@typebot.io/credentials/schemas";
 import { isNotDefined } from "@typebot.io/lib/utils";
 import type React from "react";
 import { useEffect, useState } from "react";
@@ -32,6 +32,7 @@ export const SmtpUpdateModalContent = ({ credentialsId, onUpdate }: Props) => {
   const { data: existingCredentials } =
     trpc.credentials.getCredentials.useQuery(
       {
+        scope: "workspace",
         workspaceId: workspace!.id,
         credentialsId: credentialsId,
       },
@@ -79,8 +80,9 @@ export const SmtpUpdateModalContent = ({ credentialsId, onUpdate }: Props) => {
         data: smtpConfig,
         name: smtpConfig.from.email as string,
         type: "smtp",
-        workspaceId: workspace.id,
       },
+      scope: "workspace",
+      workspaceId: workspace.id,
     });
   };
   return (
@@ -95,7 +97,7 @@ export const SmtpUpdateModalContent = ({ credentialsId, onUpdate }: Props) => {
         <ModalFooter>
           <Button
             type="submit"
-            colorScheme="blue"
+            colorScheme="orange"
             isDisabled={
               isNotDefined(smtpConfig?.from.email) ||
               isNotDefined(smtpConfig?.host) ||

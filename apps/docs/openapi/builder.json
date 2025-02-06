@@ -163,6 +163,9 @@
                                                 "$ref": "#/components/schemas/dateInput"
                                               },
                                               {
+                                                "$ref": "#/components/schemas/time"
+                                              },
+                                              {
                                                 "$ref": "#/components/schemas/paymentInput"
                                               },
                                               {
@@ -187,6 +190,7 @@
                                                 "url input": "#/components/schemas/url",
                                                 "phone number input": "#/components/schemas/phoneNumberInput",
                                                 "date input": "#/components/schemas/dateInput",
+                                                "time input": "#/components/schemas/time",
                                                 "payment input": "#/components/schemas/paymentInput",
                                                 "rating input": "#/components/schemas/rating",
                                                 "choice input": "#/components/schemas/buttonsInputV5",
@@ -273,7 +277,9 @@
                                                                       "Contains",
                                                                       "Does not contain",
                                                                       "Greater than",
+                                                                      "Greater or equal to",
                                                                       "Less than",
+                                                                      "Less or equal to",
                                                                       "Is set",
                                                                       "Is empty",
                                                                       "Starts with",
@@ -785,7 +791,9 @@
                                                                         "Contains",
                                                                         "Does not contain",
                                                                         "Greater than",
+                                                                        "Greater or equal to",
                                                                         "Less than",
+                                                                        "Less or equal to",
                                                                         "Is set",
                                                                         "Is empty",
                                                                         "Starts with",
@@ -966,7 +974,9 @@
                                                                         "Contains",
                                                                         "Does not contain",
                                                                         "Greater than",
+                                                                        "Greater or equal to",
                                                                         "Less than",
+                                                                        "Less or equal to",
                                                                         "Is set",
                                                                         "Is empty",
                                                                         "Starts with",
@@ -1704,7 +1714,8 @@
                               "version": {
                                 "type": "string",
                                 "enum": [
-                                  "6"
+                                  "6",
+                                  "6.1"
                                 ]
                               },
                               "groups": {
@@ -2284,6 +2295,32 @@
                           "type": "string",
                           "nullable": true
                         },
+                        "settings": {
+                          "type": "object",
+                          "nullable": true,
+                          "properties": {
+                            "groupTitlesAutoGeneration": {
+                              "type": "object",
+                              "properties": {
+                                "isEnabled": {
+                                  "type": "boolean"
+                                },
+                                "provider": {
+                                  "type": "string"
+                                },
+                                "credentialsId": {
+                                  "type": "string"
+                                },
+                                "model": {
+                                  "type": "string"
+                                },
+                                "prompt": {
+                                  "type": "string"
+                                }
+                              }
+                            }
+                          }
+                        },
                         "isSuspended": {
                           "type": "boolean"
                         },
@@ -2292,6 +2329,10 @@
                         },
                         "isVerified": {
                           "type": "boolean",
+                          "nullable": true
+                        },
+                        "chatsHardLimit": {
+                          "type": "number",
                           "nullable": true
                         }
                       },
@@ -2303,9 +2344,11 @@
                         "icon",
                         "plan",
                         "stripeId",
+                        "settings",
                         "isSuspended",
                         "isPastDue",
-                        "isVerified"
+                        "isVerified",
+                        "chatsHardLimit"
                       ]
                     }
                   },
@@ -2426,6 +2469,32 @@
                           "type": "string",
                           "nullable": true
                         },
+                        "settings": {
+                          "type": "object",
+                          "nullable": true,
+                          "properties": {
+                            "groupTitlesAutoGeneration": {
+                              "type": "object",
+                              "properties": {
+                                "isEnabled": {
+                                  "type": "boolean"
+                                },
+                                "provider": {
+                                  "type": "string"
+                                },
+                                "credentialsId": {
+                                  "type": "string"
+                                },
+                                "model": {
+                                  "type": "string"
+                                },
+                                "prompt": {
+                                  "type": "string"
+                                }
+                              }
+                            }
+                          }
+                        },
                         "customChatsLimit": {
                           "type": "number",
                           "nullable": true
@@ -2443,6 +2512,10 @@
                         "isVerified": {
                           "type": "boolean",
                           "nullable": true
+                        },
+                        "chatsHardLimit": {
+                          "type": "number",
+                          "nullable": true
                         }
                       },
                       "required": [
@@ -2453,11 +2526,13 @@
                         "icon",
                         "plan",
                         "stripeId",
+                        "settings",
                         "customChatsLimit",
                         "customSeatsLimit",
                         "isSuspended",
                         "isPastDue",
-                        "isVerified"
+                        "isVerified",
+                        "chatsHardLimit"
                       ]
                     }
                   },
@@ -3202,12 +3277,21 @@
                           },
                           "publishedTypebotId": {
                             "type": "string"
+                          },
+                          "accessRight": {
+                            "type": "string",
+                            "enum": [
+                              "read",
+                              "write",
+                              "guest"
+                            ]
                           }
                         },
                         "required": [
                           "name",
                           "icon",
-                          "id"
+                          "id",
+                          "accessRight"
                         ]
                       }
                     }
@@ -3311,7 +3395,8 @@
                           "version": {
                             "type": "string",
                             "enum": [
-                              "6"
+                              "6",
+                              "6.1"
                             ]
                           },
                           "name": {
@@ -3629,6 +3714,9 @@
                                             "$ref": "#/components/schemas/dateInput"
                                           },
                                           {
+                                            "$ref": "#/components/schemas/time"
+                                          },
+                                          {
                                             "$ref": "#/components/schemas/paymentInput"
                                           },
                                           {
@@ -3653,6 +3741,7 @@
                                             "url input": "#/components/schemas/url",
                                             "phone number input": "#/components/schemas/phoneNumberInput",
                                             "date input": "#/components/schemas/dateInput",
+                                            "time input": "#/components/schemas/time",
                                             "payment input": "#/components/schemas/paymentInput",
                                             "rating input": "#/components/schemas/rating",
                                             "choice input": "#/components/schemas/buttonsInputV5",
@@ -3739,7 +3828,9 @@
                                                                   "Contains",
                                                                   "Does not contain",
                                                                   "Greater than",
+                                                                  "Greater or equal to",
                                                                   "Less than",
+                                                                  "Less or equal to",
                                                                   "Is set",
                                                                   "Is empty",
                                                                   "Starts with",
@@ -4251,7 +4342,9 @@
                                                                     "Contains",
                                                                     "Does not contain",
                                                                     "Greater than",
+                                                                    "Greater or equal to",
                                                                     "Less than",
+                                                                    "Less or equal to",
                                                                     "Is set",
                                                                     "Is empty",
                                                                     "Starts with",
@@ -4432,7 +4525,9 @@
                                                                     "Contains",
                                                                     "Does not contain",
                                                                     "Greater than",
+                                                                    "Greater or equal to",
                                                                     "Less than",
+                                                                    "Less or equal to",
                                                                     "Is set",
                                                                     "Is empty",
                                                                     "Starts with",
@@ -5416,7 +5511,8 @@
                           "3": "#/components/schemas/typebotV5",
                           "4": "#/components/schemas/typebotV5",
                           "5": "#/components/schemas/typebotV5",
-                          "6": "#/components/schemas/typebotV6"
+                          "6": "#/components/schemas/typebotV6",
+                          "6.1": "#/components/schemas/typebotV6"
                         }
                       }
                     },
@@ -5645,17 +5741,28 @@
                           "3": "#/components/schemas/publicTypebotV5",
                           "4": "#/components/schemas/publicTypebotV5",
                           "5": "#/components/schemas/publicTypebotV5",
-                          "6": "#/components/schemas/publicTypebotV6"
+                          "6": "#/components/schemas/publicTypebotV6",
+                          "6.1": "#/components/schemas/publicTypebotV6"
                         }
                       }
                     },
                     "version": {
-                      "type": "string",
-                      "enum": [
-                        "3",
-                        "4",
-                        "5",
-                        "6"
+                      "anyOf": [
+                        {
+                          "type": "string",
+                          "enum": [
+                            "3",
+                            "4",
+                            "5"
+                          ]
+                        },
+                        {
+                          "type": "string",
+                          "enum": [
+                            "6",
+                            "6.1"
+                          ]
+                        }
                       ],
                       "description": "Provides the version the published bot was migrated from if `migrateToLatestVersion` is set to `true`."
                     }
@@ -5929,7 +6036,8 @@
                           "version": {
                             "type": "string",
                             "enum": [
-                              "6"
+                              "6",
+                              "6.1"
                             ]
                           },
                           "name": {
@@ -6232,6 +6340,9 @@
                                             "$ref": "#/components/schemas/dateInput"
                                           },
                                           {
+                                            "$ref": "#/components/schemas/time"
+                                          },
+                                          {
                                             "$ref": "#/components/schemas/paymentInput"
                                           },
                                           {
@@ -6256,6 +6367,7 @@
                                             "url input": "#/components/schemas/url",
                                             "phone number input": "#/components/schemas/phoneNumberInput",
                                             "date input": "#/components/schemas/dateInput",
+                                            "time input": "#/components/schemas/time",
                                             "payment input": "#/components/schemas/paymentInput",
                                             "rating input": "#/components/schemas/rating",
                                             "choice input": "#/components/schemas/buttonsInputV5",
@@ -6342,7 +6454,9 @@
                                                                   "Contains",
                                                                   "Does not contain",
                                                                   "Greater than",
+                                                                  "Greater or equal to",
                                                                   "Less than",
+                                                                  "Less or equal to",
                                                                   "Is set",
                                                                   "Is empty",
                                                                   "Starts with",
@@ -6854,7 +6968,9 @@
                                                                     "Contains",
                                                                     "Does not contain",
                                                                     "Greater than",
+                                                                    "Greater or equal to",
                                                                     "Less than",
+                                                                    "Less or equal to",
                                                                     "Is set",
                                                                     "Is empty",
                                                                     "Starts with",
@@ -7035,7 +7151,9 @@
                                                                     "Contains",
                                                                     "Does not contain",
                                                                     "Greater than",
+                                                                    "Greater or equal to",
                                                                     "Less than",
+                                                                    "Less or equal to",
                                                                     "Is set",
                                                                     "Is empty",
                                                                     "Starts with",
@@ -7878,6 +7996,9 @@
                         "title": "Typebot V5"
                       }
                     ]
+                  },
+                  "fromTemplate": {
+                    "type": "string"
                   }
                 },
                 "required": [
@@ -9309,13 +9430,6 @@
                   "workspaceId": {
                     "type": "string"
                   },
-                  "currency": {
-                    "type": "string",
-                    "enum": [
-                      "usd",
-                      "eur"
-                    ]
-                  },
                   "plan": {
                     "type": "string",
                     "enum": [
@@ -9346,7 +9460,6 @@
                   "email",
                   "company",
                   "workspaceId",
-                  "currency",
                   "plan",
                   "returnUrl"
                 ]
@@ -9447,20 +9560,12 @@
                       "STARTER",
                       "PRO"
                     ]
-                  },
-                  "currency": {
-                    "type": "string",
-                    "enum": [
-                      "usd",
-                      "eur"
-                    ]
                   }
                 },
                 "required": [
                   "returnUrl",
                   "workspaceId",
-                  "plan",
-                  "currency"
+                  "plan"
                 ]
               }
             }
@@ -9532,6 +9637,32 @@
                           "type": "string",
                           "nullable": true
                         },
+                        "settings": {
+                          "type": "object",
+                          "nullable": true,
+                          "properties": {
+                            "groupTitlesAutoGeneration": {
+                              "type": "object",
+                              "properties": {
+                                "isEnabled": {
+                                  "type": "boolean"
+                                },
+                                "provider": {
+                                  "type": "string"
+                                },
+                                "credentialsId": {
+                                  "type": "string"
+                                },
+                                "model": {
+                                  "type": "string"
+                                },
+                                "prompt": {
+                                  "type": "string"
+                                }
+                              }
+                            }
+                          }
+                        },
                         "customChatsLimit": {
                           "type": "number",
                           "nullable": true
@@ -9556,6 +9687,10 @@
                         "isVerified": {
                           "type": "boolean",
                           "nullable": true
+                        },
+                        "chatsHardLimit": {
+                          "type": "number",
+                          "nullable": true
                         }
                       },
                       "required": [
@@ -9572,13 +9707,15 @@
                         "chatsLimitSecondEmailSentAt",
                         "storageLimitFirstEmailSentAt",
                         "storageLimitSecondEmailSentAt",
+                        "settings",
                         "customChatsLimit",
                         "customStorageLimit",
                         "customSeatsLimit",
                         "isQuarantined",
                         "isSuspended",
                         "isPastDue",
-                        "isVerified"
+                        "isVerified",
+                        "chatsHardLimit"
                       ]
                     },
                     "checkoutUrl": {
@@ -9964,1765 +10101,6 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/error.FORBIDDEN"
-                }
-              }
-            }
-          },
-          "500": {
-            "description": "Internal server error",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/error.INTERNAL_SERVER_ERROR"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/v1/credentials": {
-      "post": {
-        "operationId": "credentials-createCredentials",
-        "summary": "Create credentials",
-        "tags": [
-          "Credentials"
-        ],
-        "security": [
-          {
-            "Authorization": []
-          }
-        ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "credentials": {
-                    "allOf": [
-                      {
-                        "oneOf": [
-                          {
-                            "type": "object",
-                            "properties": {
-                              "data": {
-                                "type": "object",
-                                "properties": {
-                                  "live": {
-                                    "type": "object",
-                                    "properties": {
-                                      "secretKey": {
-                                        "type": "string"
-                                      },
-                                      "publicKey": {
-                                        "type": "string"
-                                      }
-                                    },
-                                    "required": [
-                                      "secretKey",
-                                      "publicKey"
-                                    ]
-                                  },
-                                  "test": {
-                                    "type": "object",
-                                    "properties": {
-                                      "secretKey": {
-                                        "type": "string"
-                                      },
-                                      "publicKey": {
-                                        "type": "string"
-                                      }
-                                    }
-                                  }
-                                },
-                                "required": [
-                                  "live",
-                                  "test"
-                                ]
-                              },
-                              "type": {
-                                "type": "string",
-                                "enum": [
-                                  "stripe"
-                                ]
-                              },
-                              "workspaceId": {
-                                "type": "string"
-                              },
-                              "name": {
-                                "type": "string"
-                              }
-                            },
-                            "required": [
-                              "data",
-                              "type",
-                              "workspaceId",
-                              "name"
-                            ]
-                          },
-                          {
-                            "type": "object",
-                            "properties": {
-                              "data": {
-                                "type": "object",
-                                "properties": {
-                                  "host": {
-                                    "type": "string"
-                                  },
-                                  "username": {
-                                    "type": "string"
-                                  },
-                                  "password": {
-                                    "type": "string"
-                                  },
-                                  "isTlsEnabled": {
-                                    "type": "boolean"
-                                  },
-                                  "port": {
-                                    "type": "number"
-                                  },
-                                  "from": {
-                                    "type": "object",
-                                    "properties": {
-                                      "email": {
-                                        "type": "string"
-                                      },
-                                      "name": {
-                                        "type": "string"
-                                      }
-                                    }
-                                  }
-                                },
-                                "required": [
-                                  "port",
-                                  "from"
-                                ]
-                              },
-                              "type": {
-                                "type": "string",
-                                "enum": [
-                                  "smtp"
-                                ]
-                              },
-                              "workspaceId": {
-                                "type": "string"
-                              },
-                              "name": {
-                                "type": "string"
-                              }
-                            },
-                            "required": [
-                              "data",
-                              "type",
-                              "workspaceId",
-                              "name"
-                            ]
-                          },
-                          {
-                            "type": "object",
-                            "properties": {
-                              "data": {
-                                "type": "object",
-                                "properties": {
-                                  "refresh_token": {
-                                    "type": "string",
-                                    "nullable": true
-                                  },
-                                  "expiry_date": {
-                                    "type": "number",
-                                    "nullable": true
-                                  },
-                                  "access_token": {
-                                    "type": "string",
-                                    "nullable": true
-                                  },
-                                  "token_type": {
-                                    "type": "string",
-                                    "nullable": true
-                                  },
-                                  "id_token": {
-                                    "type": "string",
-                                    "nullable": true
-                                  },
-                                  "scope": {
-                                    "type": "string"
-                                  }
-                                }
-                              },
-                              "type": {
-                                "type": "string",
-                                "enum": [
-                                  "google sheets"
-                                ]
-                              },
-                              "workspaceId": {
-                                "type": "string"
-                              },
-                              "name": {
-                                "type": "string"
-                              }
-                            },
-                            "required": [
-                              "data",
-                              "type",
-                              "workspaceId",
-                              "name"
-                            ]
-                          },
-                          {
-                            "type": "object",
-                            "properties": {
-                              "data": {
-                                "type": "object",
-                                "properties": {
-                                  "systemUserAccessToken": {
-                                    "type": "string"
-                                  },
-                                  "phoneNumberId": {
-                                    "type": "string"
-                                  }
-                                },
-                                "required": [
-                                  "systemUserAccessToken",
-                                  "phoneNumberId"
-                                ]
-                              },
-                              "type": {
-                                "type": "string",
-                                "enum": [
-                                  "whatsApp"
-                                ]
-                              },
-                              "workspaceId": {
-                                "type": "string"
-                              },
-                              "name": {
-                                "type": "string"
-                              }
-                            },
-                            "required": [
-                              "data",
-                              "type",
-                              "workspaceId",
-                              "name"
-                            ]
-                          },
-                          {
-                            "type": "object",
-                            "properties": {
-                              "data": {
-                                "type": "object",
-                                "properties": {
-                                  "apiKey": {
-                                    "type": "string"
-                                  },
-                                  "baseUrl": {
-                                    "type": "string"
-                                  }
-                                }
-                              },
-                              "type": {
-                                "type": "string",
-                                "enum": [
-                                  "openai"
-                                ]
-                              },
-                              "workspaceId": {
-                                "type": "string"
-                              },
-                              "name": {
-                                "type": "string"
-                              }
-                            },
-                            "required": [
-                              "data",
-                              "type",
-                              "workspaceId",
-                              "name"
-                            ]
-                          },
-                          {
-                            "type": "object",
-                            "properties": {
-                              "data": {
-                                "type": "object",
-                                "properties": {
-                                  "apiKey": {
-                                    "type": "string"
-                                  }
-                                }
-                              },
-                              "type": {
-                                "type": "string",
-                                "enum": [
-                                  "chat-node"
-                                ]
-                              },
-                              "workspaceId": {
-                                "type": "string"
-                              },
-                              "name": {
-                                "type": "string"
-                              }
-                            },
-                            "required": [
-                              "data",
-                              "type",
-                              "workspaceId",
-                              "name"
-                            ]
-                          },
-                          {
-                            "type": "object",
-                            "properties": {
-                              "data": {
-                                "type": "object",
-                                "properties": {
-                                  "apiEndpoint": {
-                                    "type": "string"
-                                  },
-                                  "apiKey": {
-                                    "type": "string"
-                                  }
-                                }
-                              },
-                              "type": {
-                                "type": "string",
-                                "enum": [
-                                  "dify-ai"
-                                ]
-                              },
-                              "workspaceId": {
-                                "type": "string"
-                              },
-                              "name": {
-                                "type": "string"
-                              }
-                            },
-                            "required": [
-                              "data",
-                              "type",
-                              "workspaceId",
-                              "name"
-                            ]
-                          },
-                          {
-                            "type": "object",
-                            "properties": {
-                              "data": {
-                                "type": "object",
-                                "properties": {
-                                  "apiKey": {
-                                    "type": "string"
-                                  }
-                                }
-                              },
-                              "type": {
-                                "type": "string",
-                                "enum": [
-                                  "mistral"
-                                ]
-                              },
-                              "workspaceId": {
-                                "type": "string"
-                              },
-                              "name": {
-                                "type": "string"
-                              }
-                            },
-                            "required": [
-                              "data",
-                              "type",
-                              "workspaceId",
-                              "name"
-                            ]
-                          },
-                          {
-                            "type": "object",
-                            "properties": {
-                              "data": {
-                                "type": "object",
-                                "properties": {
-                                  "apiKey": {
-                                    "type": "string"
-                                  }
-                                }
-                              },
-                              "type": {
-                                "type": "string",
-                                "enum": [
-                                  "elevenlabs"
-                                ]
-                              },
-                              "workspaceId": {
-                                "type": "string"
-                              },
-                              "name": {
-                                "type": "string"
-                              }
-                            },
-                            "required": [
-                              "data",
-                              "type",
-                              "workspaceId",
-                              "name"
-                            ]
-                          },
-                          {
-                            "type": "object",
-                            "properties": {
-                              "data": {
-                                "type": "object",
-                                "properties": {
-                                  "apiKey": {
-                                    "type": "string"
-                                  }
-                                }
-                              },
-                              "type": {
-                                "type": "string",
-                                "enum": [
-                                  "anthropic"
-                                ]
-                              },
-                              "workspaceId": {
-                                "type": "string"
-                              },
-                              "name": {
-                                "type": "string"
-                              }
-                            },
-                            "required": [
-                              "data",
-                              "type",
-                              "workspaceId",
-                              "name"
-                            ]
-                          },
-                          {
-                            "type": "object",
-                            "properties": {
-                              "data": {
-                                "type": "object",
-                                "properties": {
-                                  "apiKey": {
-                                    "type": "string"
-                                  }
-                                }
-                              },
-                              "type": {
-                                "type": "string",
-                                "enum": [
-                                  "together-ai"
-                                ]
-                              },
-                              "workspaceId": {
-                                "type": "string"
-                              },
-                              "name": {
-                                "type": "string"
-                              }
-                            },
-                            "required": [
-                              "data",
-                              "type",
-                              "workspaceId",
-                              "name"
-                            ]
-                          },
-                          {
-                            "type": "object",
-                            "properties": {
-                              "data": {
-                                "type": "object",
-                                "properties": {
-                                  "apiKey": {
-                                    "type": "string"
-                                  }
-                                }
-                              },
-                              "type": {
-                                "type": "string",
-                                "enum": [
-                                  "open-router"
-                                ]
-                              },
-                              "workspaceId": {
-                                "type": "string"
-                              },
-                              "name": {
-                                "type": "string"
-                              }
-                            },
-                            "required": [
-                              "data",
-                              "type",
-                              "workspaceId",
-                              "name"
-                            ]
-                          },
-                          {
-                            "type": "object",
-                            "properties": {
-                              "data": {
-                                "type": "object",
-                                "properties": {
-                                  "baseUrl": {
-                                    "type": "string"
-                                  },
-                                  "apiKey": {
-                                    "type": "string"
-                                  }
-                                }
-                              },
-                              "type": {
-                                "type": "string",
-                                "enum": [
-                                  "nocodb"
-                                ]
-                              },
-                              "workspaceId": {
-                                "type": "string"
-                              },
-                              "name": {
-                                "type": "string"
-                              }
-                            },
-                            "required": [
-                              "data",
-                              "type",
-                              "workspaceId",
-                              "name"
-                            ]
-                          },
-                          {
-                            "type": "object",
-                            "properties": {
-                              "data": {
-                                "type": "object",
-                                "properties": {
-                                  "apiKey": {
-                                    "type": "string"
-                                  }
-                                }
-                              },
-                              "type": {
-                                "type": "string",
-                                "enum": [
-                                  "segment"
-                                ]
-                              },
-                              "workspaceId": {
-                                "type": "string"
-                              },
-                              "name": {
-                                "type": "string"
-                              }
-                            },
-                            "required": [
-                              "data",
-                              "type",
-                              "workspaceId",
-                              "name"
-                            ]
-                          },
-                          {
-                            "type": "object",
-                            "properties": {
-                              "data": {
-                                "type": "object",
-                                "properties": {
-                                  "apiKey": {
-                                    "type": "string"
-                                  },
-                                  "baseUrl": {
-                                    "type": "string"
-                                  }
-                                }
-                              },
-                              "type": {
-                                "type": "string",
-                                "enum": [
-                                  "groq"
-                                ]
-                              },
-                              "workspaceId": {
-                                "type": "string"
-                              },
-                              "name": {
-                                "type": "string"
-                              }
-                            },
-                            "required": [
-                              "data",
-                              "type",
-                              "workspaceId",
-                              "name"
-                            ]
-                          },
-                          {
-                            "type": "object",
-                            "properties": {
-                              "data": {
-                                "type": "object",
-                                "properties": {
-                                  "conversationsKeyId": {
-                                    "type": "string"
-                                  },
-                                  "conversationsSecretKey": {
-                                    "type": "string"
-                                  }
-                                }
-                              },
-                              "type": {
-                                "type": "string",
-                                "enum": [
-                                  "zendesk"
-                                ]
-                              },
-                              "workspaceId": {
-                                "type": "string"
-                              },
-                              "name": {
-                                "type": "string"
-                              }
-                            },
-                            "required": [
-                              "data",
-                              "type",
-                              "workspaceId",
-                              "name"
-                            ]
-                          }
-                        ]
-                      },
-                      {
-                        "type": "object",
-                        "properties": {
-                          "id": {
-                            "type": "string"
-                          }
-                        }
-                      }
-                    ]
-                  }
-                },
-                "required": [
-                  "credentials"
-                ]
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Successful response",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "credentialsId": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "credentialsId"
-                  ]
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Invalid input data",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/error.BAD_REQUEST"
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Authorization not provided",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/error.UNAUTHORIZED"
-                }
-              }
-            }
-          },
-          "403": {
-            "description": "Insufficient access",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/error.FORBIDDEN"
-                }
-              }
-            }
-          },
-          "500": {
-            "description": "Internal server error",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/error.INTERNAL_SERVER_ERROR"
-                }
-              }
-            }
-          }
-        }
-      },
-      "get": {
-        "operationId": "credentials-listCredentials",
-        "summary": "List workspace credentials",
-        "tags": [
-          "Credentials"
-        ],
-        "security": [
-          {
-            "Authorization": []
-          }
-        ],
-        "parameters": [
-          {
-            "in": "query",
-            "name": "workspaceId",
-            "schema": {
-              "type": "string"
-            },
-            "required": true
-          },
-          {
-            "in": "query",
-            "name": "type",
-            "schema": {
-              "type": "string",
-              "enum": [
-                "smtp",
-                "google sheets",
-                "stripe",
-                "whatsApp",
-                "openai",
-                "chat-node",
-                "dify-ai",
-                "mistral",
-                "elevenlabs",
-                "anthropic",
-                "together-ai",
-                "open-router",
-                "nocodb",
-                "segment",
-                "groq",
-                "zendesk"
-              ]
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Successful response",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "credentials": {
-                      "type": "array",
-                      "items": {
-                        "type": "object",
-                        "properties": {
-                          "id": {
-                            "type": "string"
-                          },
-                          "type": {
-                            "type": "string",
-                            "enum": [
-                              "smtp",
-                              "google sheets",
-                              "stripe",
-                              "whatsApp",
-                              "openai",
-                              "chat-node",
-                              "dify-ai",
-                              "mistral",
-                              "elevenlabs",
-                              "anthropic",
-                              "together-ai",
-                              "open-router",
-                              "nocodb",
-                              "segment",
-                              "groq",
-                              "zendesk"
-                            ]
-                          },
-                          "name": {
-                            "type": "string"
-                          }
-                        },
-                        "required": [
-                          "id",
-                          "type",
-                          "name"
-                        ]
-                      }
-                    }
-                  },
-                  "required": [
-                    "credentials"
-                  ]
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Invalid input data",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/error.BAD_REQUEST"
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Authorization not provided",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/error.UNAUTHORIZED"
-                }
-              }
-            }
-          },
-          "403": {
-            "description": "Insufficient access",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/error.FORBIDDEN"
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "Not found",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/error.NOT_FOUND"
-                }
-              }
-            }
-          },
-          "500": {
-            "description": "Internal server error",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/error.INTERNAL_SERVER_ERROR"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/v1/credentials/{credentialsId}": {
-      "get": {
-        "operationId": "credentials-getCredentials",
-        "summary": "Get credentials data",
-        "tags": [
-          "Credentials"
-        ],
-        "security": [
-          {
-            "Authorization": []
-          }
-        ],
-        "parameters": [
-          {
-            "in": "path",
-            "name": "credentialsId",
-            "schema": {
-              "type": "string"
-            },
-            "required": true
-          },
-          {
-            "in": "query",
-            "name": "workspaceId",
-            "schema": {
-              "type": "string"
-            },
-            "required": true
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Successful response",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "name": {
-                      "type": "string"
-                    },
-                    "data": {}
-                  },
-                  "required": [
-                    "name"
-                  ]
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Invalid input data",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/error.BAD_REQUEST"
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Authorization not provided",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/error.UNAUTHORIZED"
-                }
-              }
-            }
-          },
-          "403": {
-            "description": "Insufficient access",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/error.FORBIDDEN"
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "Not found",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/error.NOT_FOUND"
-                }
-              }
-            }
-          },
-          "500": {
-            "description": "Internal server error",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/error.INTERNAL_SERVER_ERROR"
-                }
-              }
-            }
-          }
-        }
-      },
-      "patch": {
-        "operationId": "credentials-updateCredentials",
-        "summary": "Create credentials",
-        "tags": [
-          "Credentials"
-        ],
-        "security": [
-          {
-            "Authorization": []
-          }
-        ],
-        "parameters": [
-          {
-            "in": "path",
-            "name": "credentialsId",
-            "schema": {
-              "type": "string"
-            },
-            "required": true
-          }
-        ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "credentials": {
-                    "oneOf": [
-                      {
-                        "type": "object",
-                        "properties": {
-                          "name": {
-                            "type": "string"
-                          },
-                          "data": {
-                            "type": "object",
-                            "properties": {
-                              "live": {
-                                "type": "object",
-                                "properties": {
-                                  "secretKey": {
-                                    "type": "string"
-                                  },
-                                  "publicKey": {
-                                    "type": "string"
-                                  }
-                                },
-                                "required": [
-                                  "secretKey",
-                                  "publicKey"
-                                ]
-                              },
-                              "test": {
-                                "type": "object",
-                                "properties": {
-                                  "secretKey": {
-                                    "type": "string"
-                                  },
-                                  "publicKey": {
-                                    "type": "string"
-                                  }
-                                }
-                              }
-                            },
-                            "required": [
-                              "live",
-                              "test"
-                            ]
-                          },
-                          "type": {
-                            "type": "string",
-                            "enum": [
-                              "stripe"
-                            ]
-                          },
-                          "workspaceId": {
-                            "type": "string"
-                          }
-                        },
-                        "required": [
-                          "name",
-                          "data",
-                          "type",
-                          "workspaceId"
-                        ]
-                      },
-                      {
-                        "type": "object",
-                        "properties": {
-                          "name": {
-                            "type": "string"
-                          },
-                          "data": {
-                            "type": "object",
-                            "properties": {
-                              "host": {
-                                "type": "string"
-                              },
-                              "username": {
-                                "type": "string"
-                              },
-                              "password": {
-                                "type": "string"
-                              },
-                              "isTlsEnabled": {
-                                "type": "boolean"
-                              },
-                              "port": {
-                                "type": "number"
-                              },
-                              "from": {
-                                "type": "object",
-                                "properties": {
-                                  "email": {
-                                    "type": "string"
-                                  },
-                                  "name": {
-                                    "type": "string"
-                                  }
-                                }
-                              }
-                            },
-                            "required": [
-                              "port",
-                              "from"
-                            ]
-                          },
-                          "type": {
-                            "type": "string",
-                            "enum": [
-                              "smtp"
-                            ]
-                          },
-                          "workspaceId": {
-                            "type": "string"
-                          }
-                        },
-                        "required": [
-                          "name",
-                          "data",
-                          "type",
-                          "workspaceId"
-                        ]
-                      },
-                      {
-                        "type": "object",
-                        "properties": {
-                          "name": {
-                            "type": "string"
-                          },
-                          "data": {
-                            "type": "object",
-                            "properties": {
-                              "refresh_token": {
-                                "type": "string",
-                                "nullable": true
-                              },
-                              "expiry_date": {
-                                "type": "number",
-                                "nullable": true
-                              },
-                              "access_token": {
-                                "type": "string",
-                                "nullable": true
-                              },
-                              "token_type": {
-                                "type": "string",
-                                "nullable": true
-                              },
-                              "id_token": {
-                                "type": "string",
-                                "nullable": true
-                              },
-                              "scope": {
-                                "type": "string"
-                              }
-                            }
-                          },
-                          "type": {
-                            "type": "string",
-                            "enum": [
-                              "google sheets"
-                            ]
-                          },
-                          "workspaceId": {
-                            "type": "string"
-                          }
-                        },
-                        "required": [
-                          "name",
-                          "data",
-                          "type",
-                          "workspaceId"
-                        ]
-                      },
-                      {
-                        "type": "object",
-                        "properties": {
-                          "name": {
-                            "type": "string"
-                          },
-                          "data": {
-                            "type": "object",
-                            "properties": {
-                              "systemUserAccessToken": {
-                                "type": "string"
-                              },
-                              "phoneNumberId": {
-                                "type": "string"
-                              }
-                            },
-                            "required": [
-                              "systemUserAccessToken",
-                              "phoneNumberId"
-                            ]
-                          },
-                          "type": {
-                            "type": "string",
-                            "enum": [
-                              "whatsApp"
-                            ]
-                          },
-                          "workspaceId": {
-                            "type": "string"
-                          }
-                        },
-                        "required": [
-                          "name",
-                          "data",
-                          "type",
-                          "workspaceId"
-                        ]
-                      },
-                      {
-                        "type": "object",
-                        "properties": {
-                          "name": {
-                            "type": "string"
-                          },
-                          "data": {
-                            "type": "object",
-                            "properties": {
-                              "apiKey": {
-                                "type": "string"
-                              },
-                              "baseUrl": {
-                                "type": "string"
-                              }
-                            }
-                          },
-                          "type": {
-                            "type": "string",
-                            "enum": [
-                              "openai"
-                            ]
-                          },
-                          "workspaceId": {
-                            "type": "string"
-                          }
-                        },
-                        "required": [
-                          "name",
-                          "data",
-                          "type",
-                          "workspaceId"
-                        ]
-                      },
-                      {
-                        "type": "object",
-                        "properties": {
-                          "name": {
-                            "type": "string"
-                          },
-                          "data": {
-                            "type": "object",
-                            "properties": {
-                              "apiKey": {
-                                "type": "string"
-                              }
-                            }
-                          },
-                          "type": {
-                            "type": "string",
-                            "enum": [
-                              "chat-node"
-                            ]
-                          },
-                          "workspaceId": {
-                            "type": "string"
-                          }
-                        },
-                        "required": [
-                          "name",
-                          "data",
-                          "type",
-                          "workspaceId"
-                        ]
-                      },
-                      {
-                        "type": "object",
-                        "properties": {
-                          "name": {
-                            "type": "string"
-                          },
-                          "data": {
-                            "type": "object",
-                            "properties": {
-                              "apiEndpoint": {
-                                "type": "string"
-                              },
-                              "apiKey": {
-                                "type": "string"
-                              }
-                            }
-                          },
-                          "type": {
-                            "type": "string",
-                            "enum": [
-                              "dify-ai"
-                            ]
-                          },
-                          "workspaceId": {
-                            "type": "string"
-                          }
-                        },
-                        "required": [
-                          "name",
-                          "data",
-                          "type",
-                          "workspaceId"
-                        ]
-                      },
-                      {
-                        "type": "object",
-                        "properties": {
-                          "name": {
-                            "type": "string"
-                          },
-                          "data": {
-                            "type": "object",
-                            "properties": {
-                              "apiKey": {
-                                "type": "string"
-                              }
-                            }
-                          },
-                          "type": {
-                            "type": "string",
-                            "enum": [
-                              "mistral"
-                            ]
-                          },
-                          "workspaceId": {
-                            "type": "string"
-                          }
-                        },
-                        "required": [
-                          "name",
-                          "data",
-                          "type",
-                          "workspaceId"
-                        ]
-                      },
-                      {
-                        "type": "object",
-                        "properties": {
-                          "name": {
-                            "type": "string"
-                          },
-                          "data": {
-                            "type": "object",
-                            "properties": {
-                              "apiKey": {
-                                "type": "string"
-                              }
-                            }
-                          },
-                          "type": {
-                            "type": "string",
-                            "enum": [
-                              "elevenlabs"
-                            ]
-                          },
-                          "workspaceId": {
-                            "type": "string"
-                          }
-                        },
-                        "required": [
-                          "name",
-                          "data",
-                          "type",
-                          "workspaceId"
-                        ]
-                      },
-                      {
-                        "type": "object",
-                        "properties": {
-                          "name": {
-                            "type": "string"
-                          },
-                          "data": {
-                            "type": "object",
-                            "properties": {
-                              "apiKey": {
-                                "type": "string"
-                              }
-                            }
-                          },
-                          "type": {
-                            "type": "string",
-                            "enum": [
-                              "anthropic"
-                            ]
-                          },
-                          "workspaceId": {
-                            "type": "string"
-                          }
-                        },
-                        "required": [
-                          "name",
-                          "data",
-                          "type",
-                          "workspaceId"
-                        ]
-                      },
-                      {
-                        "type": "object",
-                        "properties": {
-                          "name": {
-                            "type": "string"
-                          },
-                          "data": {
-                            "type": "object",
-                            "properties": {
-                              "apiKey": {
-                                "type": "string"
-                              }
-                            }
-                          },
-                          "type": {
-                            "type": "string",
-                            "enum": [
-                              "together-ai"
-                            ]
-                          },
-                          "workspaceId": {
-                            "type": "string"
-                          }
-                        },
-                        "required": [
-                          "name",
-                          "data",
-                          "type",
-                          "workspaceId"
-                        ]
-                      },
-                      {
-                        "type": "object",
-                        "properties": {
-                          "name": {
-                            "type": "string"
-                          },
-                          "data": {
-                            "type": "object",
-                            "properties": {
-                              "apiKey": {
-                                "type": "string"
-                              }
-                            }
-                          },
-                          "type": {
-                            "type": "string",
-                            "enum": [
-                              "open-router"
-                            ]
-                          },
-                          "workspaceId": {
-                            "type": "string"
-                          }
-                        },
-                        "required": [
-                          "name",
-                          "data",
-                          "type",
-                          "workspaceId"
-                        ]
-                      },
-                      {
-                        "type": "object",
-                        "properties": {
-                          "name": {
-                            "type": "string"
-                          },
-                          "data": {
-                            "type": "object",
-                            "properties": {
-                              "baseUrl": {
-                                "type": "string"
-                              },
-                              "apiKey": {
-                                "type": "string"
-                              }
-                            }
-                          },
-                          "type": {
-                            "type": "string",
-                            "enum": [
-                              "nocodb"
-                            ]
-                          },
-                          "workspaceId": {
-                            "type": "string"
-                          }
-                        },
-                        "required": [
-                          "name",
-                          "data",
-                          "type",
-                          "workspaceId"
-                        ]
-                      },
-                      {
-                        "type": "object",
-                        "properties": {
-                          "name": {
-                            "type": "string"
-                          },
-                          "data": {
-                            "type": "object",
-                            "properties": {
-                              "apiKey": {
-                                "type": "string"
-                              }
-                            }
-                          },
-                          "type": {
-                            "type": "string",
-                            "enum": [
-                              "segment"
-                            ]
-                          },
-                          "workspaceId": {
-                            "type": "string"
-                          }
-                        },
-                        "required": [
-                          "name",
-                          "data",
-                          "type",
-                          "workspaceId"
-                        ]
-                      },
-                      {
-                        "type": "object",
-                        "properties": {
-                          "name": {
-                            "type": "string"
-                          },
-                          "data": {
-                            "type": "object",
-                            "properties": {
-                              "apiKey": {
-                                "type": "string"
-                              },
-                              "baseUrl": {
-                                "type": "string"
-                              }
-                            }
-                          },
-                          "type": {
-                            "type": "string",
-                            "enum": [
-                              "groq"
-                            ]
-                          },
-                          "workspaceId": {
-                            "type": "string"
-                          }
-                        },
-                        "required": [
-                          "name",
-                          "data",
-                          "type",
-                          "workspaceId"
-                        ]
-                      },
-                      {
-                        "type": "object",
-                        "properties": {
-                          "name": {
-                            "type": "string"
-                          },
-                          "data": {
-                            "type": "object",
-                            "properties": {
-                              "conversationsKeyId": {
-                                "type": "string"
-                              },
-                              "conversationsSecretKey": {
-                                "type": "string"
-                              }
-                            }
-                          },
-                          "type": {
-                            "type": "string",
-                            "enum": [
-                              "zendesk"
-                            ]
-                          },
-                          "workspaceId": {
-                            "type": "string"
-                          }
-                        },
-                        "required": [
-                          "name",
-                          "data",
-                          "type",
-                          "workspaceId"
-                        ]
-                      }
-                    ]
-                  }
-                },
-                "required": [
-                  "credentials"
-                ]
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Successful response",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "credentialsId": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "credentialsId"
-                  ]
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Invalid input data",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/error.BAD_REQUEST"
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Authorization not provided",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/error.UNAUTHORIZED"
-                }
-              }
-            }
-          },
-          "403": {
-            "description": "Insufficient access",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/error.FORBIDDEN"
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "Not found",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/error.NOT_FOUND"
-                }
-              }
-            }
-          },
-          "500": {
-            "description": "Internal server error",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/error.INTERNAL_SERVER_ERROR"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/v1/credentials/:credentialsId": {
-      "delete": {
-        "operationId": "credentials-deleteCredentials",
-        "summary": "Delete credentials",
-        "tags": [
-          "Credentials"
-        ],
-        "security": [
-          {
-            "Authorization": []
-          }
-        ],
-        "parameters": [
-          {
-            "in": "query",
-            "name": "credentialsId",
-            "schema": {
-              "type": "string"
-            },
-            "required": true
-          },
-          {
-            "in": "query",
-            "name": "workspaceId",
-            "schema": {
-              "type": "string"
-            },
-            "required": true
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Successful response",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "credentialsId": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "credentialsId"
-                  ]
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Invalid input data",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/error.BAD_REQUEST"
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Authorization not provided",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/error.UNAUTHORIZED"
-                }
-              }
-            }
-          },
-          "403": {
-            "description": "Insufficient access",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/error.FORBIDDEN"
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "Not found",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/error.NOT_FOUND"
                 }
               }
             }
@@ -13039,6 +11417,20 @@
                                             "from": {
                                               "type": "string"
                                             },
+                                            "timestamp": {
+                                              "type": "string"
+                                            },
+                                            "referral": {
+                                              "type": "object",
+                                              "properties": {
+                                                "ctwa_clid": {
+                                                  "type": "string"
+                                                },
+                                                "source_id": {
+                                                  "type": "string"
+                                                }
+                                              }
+                                            },
                                             "type": {
                                               "type": "string",
                                               "enum": [
@@ -13055,16 +11447,13 @@
                                               "required": [
                                                 "body"
                                               ]
-                                            },
-                                            "timestamp": {
-                                              "type": "string"
                                             }
                                           },
                                           "required": [
                                             "from",
+                                            "timestamp",
                                             "type",
-                                            "text",
-                                            "timestamp"
+                                            "text"
                                           ]
                                         },
                                         {
@@ -13072,6 +11461,20 @@
                                           "properties": {
                                             "from": {
                                               "type": "string"
+                                            },
+                                            "timestamp": {
+                                              "type": "string"
+                                            },
+                                            "referral": {
+                                              "type": "object",
+                                              "properties": {
+                                                "ctwa_clid": {
+                                                  "type": "string"
+                                                },
+                                                "source_id": {
+                                                  "type": "string"
+                                                }
+                                              }
                                             },
                                             "type": {
                                               "type": "string",
@@ -13093,16 +11496,13 @@
                                                 "text",
                                                 "payload"
                                               ]
-                                            },
-                                            "timestamp": {
-                                              "type": "string"
                                             }
                                           },
                                           "required": [
                                             "from",
+                                            "timestamp",
                                             "type",
-                                            "button",
-                                            "timestamp"
+                                            "button"
                                           ]
                                         },
                                         {
@@ -13110,6 +11510,20 @@
                                           "properties": {
                                             "from": {
                                               "type": "string"
+                                            },
+                                            "timestamp": {
+                                              "type": "string"
+                                            },
+                                            "referral": {
+                                              "type": "object",
+                                              "properties": {
+                                                "ctwa_clid": {
+                                                  "type": "string"
+                                                },
+                                                "source_id": {
+                                                  "type": "string"
+                                                }
+                                              }
                                             },
                                             "type": {
                                               "type": "string",
@@ -13139,16 +11553,13 @@
                                               "required": [
                                                 "button_reply"
                                               ]
-                                            },
-                                            "timestamp": {
-                                              "type": "string"
                                             }
                                           },
                                           "required": [
                                             "from",
+                                            "timestamp",
                                             "type",
-                                            "interactive",
-                                            "timestamp"
+                                            "interactive"
                                           ]
                                         },
                                         {
@@ -13156,6 +11567,20 @@
                                           "properties": {
                                             "from": {
                                               "type": "string"
+                                            },
+                                            "timestamp": {
+                                              "type": "string"
+                                            },
+                                            "referral": {
+                                              "type": "object",
+                                              "properties": {
+                                                "ctwa_clid": {
+                                                  "type": "string"
+                                                },
+                                                "source_id": {
+                                                  "type": "string"
+                                                }
+                                              }
                                             },
                                             "type": {
                                               "type": "string",
@@ -13176,16 +11601,13 @@
                                               "required": [
                                                 "id"
                                               ]
-                                            },
-                                            "timestamp": {
-                                              "type": "string"
                                             }
                                           },
                                           "required": [
                                             "from",
+                                            "timestamp",
                                             "type",
-                                            "image",
-                                            "timestamp"
+                                            "image"
                                           ]
                                         },
                                         {
@@ -13193,6 +11615,20 @@
                                           "properties": {
                                             "from": {
                                               "type": "string"
+                                            },
+                                            "timestamp": {
+                                              "type": "string"
+                                            },
+                                            "referral": {
+                                              "type": "object",
+                                              "properties": {
+                                                "ctwa_clid": {
+                                                  "type": "string"
+                                                },
+                                                "source_id": {
+                                                  "type": "string"
+                                                }
+                                              }
                                             },
                                             "type": {
                                               "type": "string",
@@ -13213,16 +11649,13 @@
                                               "required": [
                                                 "id"
                                               ]
-                                            },
-                                            "timestamp": {
-                                              "type": "string"
                                             }
                                           },
                                           "required": [
                                             "from",
+                                            "timestamp",
                                             "type",
-                                            "video",
-                                            "timestamp"
+                                            "video"
                                           ]
                                         },
                                         {
@@ -13230,6 +11663,20 @@
                                           "properties": {
                                             "from": {
                                               "type": "string"
+                                            },
+                                            "timestamp": {
+                                              "type": "string"
+                                            },
+                                            "referral": {
+                                              "type": "object",
+                                              "properties": {
+                                                "ctwa_clid": {
+                                                  "type": "string"
+                                                },
+                                                "source_id": {
+                                                  "type": "string"
+                                                }
+                                              }
                                             },
                                             "type": {
                                               "type": "string",
@@ -13247,16 +11694,13 @@
                                               "required": [
                                                 "id"
                                               ]
-                                            },
-                                            "timestamp": {
-                                              "type": "string"
                                             }
                                           },
                                           "required": [
                                             "from",
+                                            "timestamp",
                                             "type",
-                                            "audio",
-                                            "timestamp"
+                                            "audio"
                                           ]
                                         },
                                         {
@@ -13264,6 +11708,20 @@
                                           "properties": {
                                             "from": {
                                               "type": "string"
+                                            },
+                                            "timestamp": {
+                                              "type": "string"
+                                            },
+                                            "referral": {
+                                              "type": "object",
+                                              "properties": {
+                                                "ctwa_clid": {
+                                                  "type": "string"
+                                                },
+                                                "source_id": {
+                                                  "type": "string"
+                                                }
+                                              }
                                             },
                                             "type": {
                                               "type": "string",
@@ -13284,16 +11742,13 @@
                                               "required": [
                                                 "id"
                                               ]
-                                            },
-                                            "timestamp": {
-                                              "type": "string"
                                             }
                                           },
                                           "required": [
                                             "from",
+                                            "timestamp",
                                             "type",
-                                            "document",
-                                            "timestamp"
+                                            "document"
                                           ]
                                         },
                                         {
@@ -13301,6 +11756,20 @@
                                           "properties": {
                                             "from": {
                                               "type": "string"
+                                            },
+                                            "timestamp": {
+                                              "type": "string"
+                                            },
+                                            "referral": {
+                                              "type": "object",
+                                              "properties": {
+                                                "ctwa_clid": {
+                                                  "type": "string"
+                                                },
+                                                "source_id": {
+                                                  "type": "string"
+                                                }
+                                              }
                                             },
                                             "type": {
                                               "type": "string",
@@ -13322,16 +11791,13 @@
                                                 "latitude",
                                                 "longitude"
                                               ]
-                                            },
-                                            "timestamp": {
-                                              "type": "string"
                                             }
                                           },
                                           "required": [
                                             "from",
+                                            "timestamp",
                                             "type",
-                                            "location",
-                                            "timestamp"
+                                            "location"
                                           ]
                                         },
                                         {
@@ -13339,6 +11805,20 @@
                                           "properties": {
                                             "from": {
                                               "type": "string"
+                                            },
+                                            "timestamp": {
+                                              "type": "string"
+                                            },
+                                            "referral": {
+                                              "type": "object",
+                                              "properties": {
+                                                "ctwa_clid": {
+                                                  "type": "string"
+                                                },
+                                                "source_id": {
+                                                  "type": "string"
+                                                }
+                                              }
                                             },
                                             "type": {
                                               "type": "string",
@@ -13352,20 +11832,14 @@
                                                 "data": {
                                                   "type": "string"
                                                 }
-                                              },
-                                              "required": [
-                                                "data"
-                                              ]
-                                            },
-                                            "timestamp": {
-                                              "type": "string"
+                                              }
                                             }
                                           },
                                           "required": [
                                             "from",
+                                            "timestamp",
                                             "type",
-                                            "webhook",
-                                            "timestamp"
+                                            "webhook"
                                           ]
                                         }
                                       ]
@@ -14715,7 +13189,8 @@
                 "type": "boolean"
               },
               "format": {
-                "type": "string"
+                "type": "string",
+                "description": "Format of the string is based on Unicode Technical Standard #35"
               },
               "min": {
                 "type": "string"
@@ -14731,6 +13206,48 @@
           "type"
         ],
         "title": "Date"
+      },
+      "time": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "outgoingEdgeId": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "time input"
+            ]
+          },
+          "options": {
+            "type": "object",
+            "properties": {
+              "variableId": {
+                "type": "string"
+              },
+              "labels": {
+                "type": "object",
+                "properties": {
+                  "button": {
+                    "type": "string"
+                  }
+                }
+              },
+              "format": {
+                "type": "string",
+                "description": "Format of the string is based on Unicode Technical Standard #35"
+              }
+            }
+          }
+        },
+        "required": [
+          "id",
+          "type"
+        ],
+        "title": "Time"
       },
       "paymentInput": {
         "type": "object",
@@ -14983,7 +13500,9 @@
                                   "Contains",
                                   "Does not contain",
                                   "Greater than",
+                                  "Greater or equal to",
                                   "Less than",
+                                  "Less or equal to",
                                   "Is set",
                                   "Is empty",
                                   "Starts with",
@@ -15031,6 +13550,9 @@
               },
               "searchInputPlaceholder": {
                 "type": "string"
+              },
+              "areInitialSearchButtonsVisible": {
+                "type": "boolean"
               }
             }
           }
@@ -15190,7 +13712,9 @@
                                   "Contains",
                                   "Does not contain",
                                   "Greater than",
+                                  "Greater or equal to",
                                   "Less than",
+                                  "Less or equal to",
                                   "Is set",
                                   "Is empty",
                                   "Starts with",
@@ -15366,6 +13890,9 @@
                   },
                   "isCode": {
                     "type": "boolean"
+                  },
+                  "saveErrorInVariableId": {
+                    "type": "string"
                   }
                 }
               },
@@ -15415,7 +13942,9 @@
                       "Random ID",
                       "Phone number",
                       "Contact name",
-                      "Transcript"
+                      "Transcript",
+                      "Referral Click ID",
+                      "Referral Source ID"
                     ]
                   }
                 },
@@ -15443,6 +13972,9 @@
                   },
                   "isCode": {
                     "type": "boolean"
+                  },
+                  "saveErrorInVariableId": {
+                    "type": "string"
                   }
                 },
                 "required": [
@@ -16070,6 +14602,9 @@
                       "$ref": "#/components/schemas/dateInput"
                     },
                     {
+                      "$ref": "#/components/schemas/time"
+                    },
+                    {
                       "$ref": "#/components/schemas/paymentInput"
                     },
                     {
@@ -16094,6 +14629,7 @@
                       "url input": "#/components/schemas/url",
                       "phone number input": "#/components/schemas/phoneNumberInput",
                       "date input": "#/components/schemas/dateInput",
+                      "time input": "#/components/schemas/time",
                       "payment input": "#/components/schemas/paymentInput",
                       "rating input": "#/components/schemas/rating",
                       "choice input": "#/components/schemas/buttonsInput",
@@ -16602,6 +15138,9 @@
                     },
                     {
                       "$ref": "#/components/schemas/zendeskBlock"
+                    },
+                    {
+                      "$ref": "#/components/schemas/posthogBlock"
                     }
                   ],
                   "discriminator": {
@@ -16620,7 +15159,8 @@
                       "nocodb": "#/components/schemas/nocodbBlock",
                       "segment": "#/components/schemas/segmentBlock",
                       "groq": "#/components/schemas/groqBlock",
-                      "zendesk": "#/components/schemas/zendeskBlock"
+                      "zendesk": "#/components/schemas/zendeskBlock",
+                      "posthog": "#/components/schemas/posthogBlock"
                     }
                   }
                 }
@@ -16700,7 +15240,9 @@
                                   "Contains",
                                   "Does not contain",
                                   "Greater than",
+                                  "Greater or equal to",
                                   "Less than",
+                                  "Less or equal to",
                                   "Is set",
                                   "Is empty",
                                   "Starts with",
@@ -16748,6 +15290,9 @@
               },
               "searchInputPlaceholder": {
                 "type": "string"
+              },
+              "areInitialSearchButtonsVisible": {
+                "type": "boolean"
               }
             }
           }
@@ -16901,7 +15446,9 @@
                                   "Contains",
                                   "Does not contain",
                                   "Greater than",
+                                  "Greater or equal to",
                                   "Less than",
+                                  "Less or equal to",
                                   "Is set",
                                   "Is empty",
                                   "Starts with",
@@ -17029,7 +15576,9 @@
                               "Contains",
                               "Does not contain",
                               "Greater than",
+                              "Greater or equal to",
                               "Less than",
+                              "Less or equal to",
                               "Is set",
                               "Is empty",
                               "Starts with",
@@ -17251,7 +15800,9 @@
                                 "Contains",
                                 "Does not contain",
                                 "Greater than",
+                                "Greater or equal to",
                                 "Less than",
+                                "Less or equal to",
                                 "Is set",
                                 "Is empty",
                                 "Starts with",
@@ -17415,7 +15966,9 @@
                                 "Contains",
                                 "Does not contain",
                                 "Greater than",
+                                "Greater or equal to",
                                 "Less than",
+                                "Less or equal to",
                                 "Is set",
                                 "Is empty",
                                 "Starts with",
@@ -18141,6 +16694,9 @@
                         }
                       }
                     }
+                  },
+                  "additionalInstructions": {
+                    "type": "string"
                   },
                   "responseMapping": {
                     "type": "array",
@@ -18971,6 +17527,14 @@
                       ]
                     }
                   },
+                  "temperature": {
+                    "anyOf": [
+                      {
+                        "type": "number"
+                      },
+                      {}
+                    ]
+                  },
                   "responseMapping": {
                     "type": "array",
                     "items": {
@@ -18979,7 +17543,8 @@
                         "item": {
                           "type": "string",
                           "enum": [
-                            "Message content"
+                            "Message content",
+                            "Total tokens"
                           ]
                         },
                         "variableId": {
@@ -19487,7 +18052,7 @@
                         "item": {
                           "type": "string",
                           "enum": [
-                            "Message Content"
+                            "Message content"
                           ]
                         },
                         "variableId": {
@@ -21051,6 +19616,148 @@
         ],
         "title": "Zendesk"
       },
+      "posthogBlock": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "outgoingEdgeId": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "posthog"
+            ]
+          },
+          "options": {
+            "oneOf": [
+              {
+                "type": "object",
+                "properties": {
+                  "credentialsId": {
+                    "type": "string"
+                  }
+                }
+              },
+              {
+                "type": "object",
+                "properties": {
+                  "credentialsId": {
+                    "type": "string"
+                  },
+                  "action": {
+                    "type": "string",
+                    "enum": [
+                      "Capture"
+                    ]
+                  },
+                  "isAnonymous": {
+                    "type": "boolean"
+                  },
+                  "distinctId": {
+                    "type": "string"
+                  },
+                  "event": {
+                    "type": "string"
+                  },
+                  "properties": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "key": {
+                          "type": "string"
+                        },
+                        "value": {
+                          "type": "string"
+                        }
+                      }
+                    }
+                  },
+                  "personProperties": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "key": {
+                          "type": "string"
+                        },
+                        "value": {
+                          "type": "string"
+                        }
+                      }
+                    }
+                  },
+                  "groups": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "type": {
+                          "type": "string"
+                        },
+                        "key": {
+                          "type": "string"
+                        }
+                      }
+                    }
+                  }
+                },
+                "required": [
+                  "action"
+                ]
+              },
+              {
+                "type": "object",
+                "properties": {
+                  "credentialsId": {
+                    "type": "string"
+                  },
+                  "action": {
+                    "type": "string",
+                    "enum": [
+                      "Identify Group"
+                    ]
+                  },
+                  "distinctId": {
+                    "type": "string"
+                  },
+                  "groupType": {
+                    "type": "string"
+                  },
+                  "groupKey": {
+                    "type": "string"
+                  },
+                  "properties": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "key": {
+                          "type": "string"
+                        },
+                        "value": {
+                          "type": "string"
+                        }
+                      }
+                    }
+                  }
+                },
+                "required": [
+                  "action"
+                ]
+              }
+            ]
+          }
+        },
+        "required": [
+          "id",
+          "type"
+        ],
+        "title": "Posthog"
+      },
       "error.BAD_REQUEST": {
         "type": "object",
         "properties": {
@@ -21738,6 +20445,18 @@
                   "large"
                 ],
                 "description": "Deprecated, use `container.border.roundeness` instead"
+              },
+              "buttonsInput": {
+                "type": "object",
+                "properties": {
+                  "layout": {
+                    "type": "string",
+                    "enum": [
+                      "wrap",
+                      "vertical"
+                    ]
+                  }
+                }
               }
             }
           },
@@ -21780,6 +20499,32 @@
                       "session",
                       "local"
                     ]
+                  }
+                }
+              },
+              "systemMessages": {
+                "type": "object",
+                "properties": {
+                  "invalidMessage": {
+                    "type": "string"
+                  },
+                  "botClosed": {
+                    "type": "string"
+                  },
+                  "popupBlockedDescription": {
+                    "type": "string"
+                  },
+                  "popupBlockedButtonLabel": {
+                    "type": "string"
+                  },
+                  "fileUploadError": {
+                    "type": "string"
+                  },
+                  "fileUploadSizeError": {
+                    "type": "string"
+                  },
+                  "whatsAppPictureChoiceSelectLabel": {
+                    "type": "string"
                   }
                 }
               }
@@ -21862,7 +20607,9 @@
                             "Contains",
                             "Does not contain",
                             "Greater than",
+                            "Greater or equal to",
                             "Less than",
+                            "Less or equal to",
                             "Is set",
                             "Is empty",
                             "Starts with",
@@ -21922,7 +20669,8 @@
           "version": {
             "type": "string",
             "enum": [
-              "6"
+              "6",
+              "6.1"
             ]
           },
           "id": {
@@ -22274,6 +21022,9 @@
                             "$ref": "#/components/schemas/dateInput"
                           },
                           {
+                            "$ref": "#/components/schemas/time"
+                          },
+                          {
                             "$ref": "#/components/schemas/paymentInput"
                           },
                           {
@@ -22298,6 +21049,7 @@
                             "url input": "#/components/schemas/url",
                             "phone number input": "#/components/schemas/phoneNumberInput",
                             "date input": "#/components/schemas/dateInput",
+                            "time input": "#/components/schemas/time",
                             "payment input": "#/components/schemas/paymentInput",
                             "rating input": "#/components/schemas/rating",
                             "choice input": "#/components/schemas/buttonsInputV5",
@@ -22384,7 +21136,9 @@
                                                   "Contains",
                                                   "Does not contain",
                                                   "Greater than",
+                                                  "Greater or equal to",
                                                   "Less than",
+                                                  "Less or equal to",
                                                   "Is set",
                                                   "Is empty",
                                                   "Starts with",
@@ -22896,7 +21650,9 @@
                                                     "Contains",
                                                     "Does not contain",
                                                     "Greater than",
+                                                    "Greater or equal to",
                                                     "Less than",
+                                                    "Less or equal to",
                                                     "Is set",
                                                     "Is empty",
                                                     "Starts with",
@@ -23077,7 +21833,9 @@
                                                     "Contains",
                                                     "Does not contain",
                                                     "Greater than",
+                                                    "Greater or equal to",
                                                     "Less than",
+                                                    "Less or equal to",
                                                     "Is set",
                                                     "Is empty",
                                                     "Starts with",
@@ -23971,7 +22729,8 @@
           "version": {
             "type": "string",
             "enum": [
-              "6"
+              "6",
+              "6.1"
             ]
           },
           "createdAt": {
@@ -24246,6 +23005,9 @@
                             "$ref": "#/components/schemas/dateInput"
                           },
                           {
+                            "$ref": "#/components/schemas/time"
+                          },
+                          {
                             "$ref": "#/components/schemas/paymentInput"
                           },
                           {
@@ -24270,6 +23032,7 @@
                             "url input": "#/components/schemas/url",
                             "phone number input": "#/components/schemas/phoneNumberInput",
                             "date input": "#/components/schemas/dateInput",
+                            "time input": "#/components/schemas/time",
                             "payment input": "#/components/schemas/paymentInput",
                             "rating input": "#/components/schemas/rating",
                             "choice input": "#/components/schemas/buttonsInputV5",
@@ -24356,7 +23119,9 @@
                                                   "Contains",
                                                   "Does not contain",
                                                   "Greater than",
+                                                  "Greater or equal to",
                                                   "Less than",
+                                                  "Less or equal to",
                                                   "Is set",
                                                   "Is empty",
                                                   "Starts with",
@@ -24868,7 +23633,9 @@
                                                     "Contains",
                                                     "Does not contain",
                                                     "Greater than",
+                                                    "Greater or equal to",
                                                     "Less than",
+                                                    "Less or equal to",
                                                     "Is set",
                                                     "Is empty",
                                                     "Starts with",
@@ -25049,7 +23816,9 @@
                                                     "Contains",
                                                     "Does not contain",
                                                     "Greater than",
+                                                    "Greater or equal to",
                                                     "Less than",
+                                                    "Less or equal to",
                                                     "Is set",
                                                     "Is empty",
                                                     "Starts with",
