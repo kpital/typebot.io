@@ -1,12 +1,10 @@
-import { PlusIcon, SettingsIcon } from "@/components/icons";
+import { SettingsIcon } from "@/components/icons";
 import { useTypebot } from "@/features/editor/providers/TypebotProvider";
 import { useGraph } from "@/features/graph/providers/GraphProvider";
 import {
-  Box,
   Editable,
   EditablePreview,
   EditableTextarea,
-  Fade,
   Flex,
   IconButton,
   Popover,
@@ -19,8 +17,10 @@ import {
   useColorModeValue,
 } from "@chakra-ui/react";
 import { useTranslate } from "@tolgee/react";
-import type { Item } from "@typebot.io/blocks-core/schemas/items/schema";
-import type { ItemIndices } from "@typebot.io/blocks-core/schemas/items/types";
+import type {
+  Item,
+  ItemIndices,
+} from "@typebot.io/blocks-core/schemas/items/schema";
 import type { ButtonItem } from "@typebot.io/blocks-inputs/choice/schema";
 import { convertStrToList } from "@typebot.io/lib/convertStrToList";
 import { isEmpty } from "@typebot.io/lib/utils";
@@ -35,10 +35,8 @@ type Props = {
 
 export const ButtonsItemNode = ({ item, indices, isMouseOver }: Props) => {
   const { t } = useTranslate();
-  const [isMouseOverAddButtonHitbox, setIsMouseOverAddButtonHitbox] =
-    useState(false);
   const { deleteItem, updateItem, createItem } = useTypebot();
-  const { openedItemId, setOpenedItemId } = useGraph();
+  const { openedNodeId, setOpenedNodeId } = useGraph();
   const [itemValue, setItemValue] = useState(
     item.content ??
       (indices.itemIndex === 0
@@ -102,7 +100,7 @@ export const ButtonsItemNode = ({ item, indices, isMouseOver }: Props) => {
     <Popover
       placement="right"
       isLazy
-      isOpen={openedItemId === item.id}
+      isOpen={openedNodeId === item.id}
       closeOnBlur={false}
     >
       <PopoverAnchor>
@@ -153,39 +151,10 @@ export const ButtonsItemNode = ({ item, indices, isMouseOver }: Props) => {
                 variant="ghost"
                 size="sm"
                 shadow="md"
-                onClick={() => setOpenedItemId(item.id)}
+                onClick={() => setOpenedNodeId(item.id)}
               />
             </Flex>
           </SlideFade>
-          <Box
-            pos="absolute"
-            w="full"
-            left="0px"
-            h="30px"
-            bottom="-18px"
-            zIndex={10}
-            onClick={appendButton}
-            onMouseEnter={() => setIsMouseOverAddButtonHitbox(true)}
-            onMouseLeave={() => setIsMouseOverAddButtonHitbox(false)}
-          >
-            <Fade
-              in={isMouseOverAddButtonHitbox}
-              style={{
-                position: "absolute",
-                top: "3px",
-                left: "90px",
-              }}
-              unmountOnExit
-            >
-              <IconButton
-                aria-label={t("blocks.inputs.button.addItem.ariaLabel")}
-                icon={<PlusIcon />}
-                size="xs"
-                shadow="md"
-                colorScheme="gray"
-              />
-            </Fade>
-          </Box>
         </Flex>
       </PopoverAnchor>
       <Portal>

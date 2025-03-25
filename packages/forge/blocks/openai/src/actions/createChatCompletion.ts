@@ -15,7 +15,10 @@ export const createChatCompletion = createAction({
   auth,
   baseOptions,
   options: parseChatCompletionOptions({
-    modelFetchId: "fetchModels",
+    models: {
+      type: "fetcher",
+      id: "fetchModels",
+    },
   }),
   getSetVariableIds: getChatCompletionSetVarIds,
   turnableInto: [
@@ -25,14 +28,31 @@ export const createChatCompletion = createAction({
     {
       blockId: "together-ai",
     },
-    { blockId: "mistral" },
+    {
+      blockId: "mistral",
+      transform: (options) => ({ ...options, model: undefined }),
+    },
     { blockId: "groq" },
+    {
+      blockId: "perplexity",
+      transform: (options) => ({
+        ...options,
+        model: undefined,
+      }),
+    },
     {
       blockId: "anthropic",
       transform: (options) => ({
         ...options,
         model: undefined,
         action: "Create Chat Message",
+      }),
+    },
+    {
+      blockId: "deepseek",
+      transform: (options) => ({
+        ...options,
+        model: undefined,
       }),
     },
   ],
@@ -54,6 +74,7 @@ export const createChatCompletion = createAction({
       options,
       variables,
       logs,
+      sessionStore,
     }) => {
       if (!apiKey) return logs.add("No API key provided");
       const modelName = options.model?.trim();
@@ -70,24 +91,42 @@ export const createChatCompletion = createAction({
         messages: options.messages,
         tools: options.tools,
         isVisionEnabled: isModelCompatibleWithVision(modelName),
-        temperature: options.temperature
-          ? Number(options.temperature)
-          : undefined,
+        temperature: options.temperature,
         responseMapping: options.responseMapping,
         logs,
+        sessionStore,
       });
     },
     stream: {
       getStreamVariableId: getChatCompletionStreamVarId,
-      run: async ({ credentials: { apiKey, baseUrl }, options, variables }) => {
+      run: async ({
+        credentials: { apiKey, baseUrl },
+        options,
+        variables,
+        sessionStore,
+      }) => {
+        const context = "While streaming OpenAI chat completion";
         if (!apiKey)
-          return { httpError: { status: 400, message: "No API key provided" } };
+          return {
+            error: {
+              description: "No API key provided",
+              context,
+            },
+          };
         const modelName = options.model?.trim();
         if (!modelName)
-          return { httpError: { status: 400, message: "No model provided" } };
+          return {
+            error: {
+              description: "No model provided",
+              context,
+            },
+          };
         if (!options.messages)
           return {
-            httpError: { status: 400, message: "No messages provided" },
+            error: {
+              description: "No messages provided",
+              context,
+            },
           };
 
         return runChatCompletionStream({
@@ -100,10 +139,9 @@ export const createChatCompletion = createAction({
           messages: options.messages,
           isVisionEnabled: isModelCompatibleWithVision(modelName),
           tools: options.tools,
-          temperature: options.temperature
-            ? Number(options.temperature)
-            : undefined,
+          temperature: options.temperature,
           responseMapping: options.responseMapping,
+          sessionStore,
         });
       },
     },

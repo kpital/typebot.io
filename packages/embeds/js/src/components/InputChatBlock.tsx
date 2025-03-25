@@ -1,5 +1,6 @@
 import { Buttons } from "@/features/blocks/inputs/buttons/components/Buttons";
 import { MultipleChoicesForm } from "@/features/blocks/inputs/buttons/components/MultipleChoicesForm";
+import { CardsCaroussel } from "@/features/blocks/inputs/cards/CardsCaroussel";
 import { DateForm } from "@/features/blocks/inputs/date/components/DateForm";
 import { EmailInput } from "@/features/blocks/inputs/email/components/EmailInput";
 import { FileUploadForm } from "@/features/blocks/inputs/fileUpload/components/FileUploadForm";
@@ -13,9 +14,12 @@ import { TextInput } from "@/features/blocks/inputs/textInput/components/TextInp
 import { TimeForm } from "@/features/blocks/inputs/time/components/TimeForm";
 import { UrlInput } from "@/features/blocks/inputs/url/components/UrlInput";
 import type { BotContext, InputSubmitContent } from "@/types";
+import { getAvatarAtIndex } from "@/utils/avatarHistory";
+import type { AvatarHistory } from "@/utils/avatarHistory";
 import { formattedMessages } from "@/utils/formattedMessagesSignal";
 import { isMobile } from "@/utils/isMobileSignal";
 import { persist } from "@/utils/persist";
+import type { CardsBlock } from "@typebot.io/blocks-inputs/cards/schema";
 import type { ChoiceInputBlock } from "@typebot.io/blocks-inputs/choice/schema";
 import { InputBlockType } from "@typebot.io/blocks-inputs/constants";
 import type { DateInputBlock } from "@typebot.io/blocks-inputs/date/schema";
@@ -56,6 +60,7 @@ type Props = {
   hasError: boolean;
   isOngoingLastChunk: boolean;
   theme: Theme;
+  avatarHistory: AvatarHistory[];
   onTransitionEnd: () => void;
   onSubmit: (content: InputSubmitContent) => void;
   onSkip: () => void;
@@ -96,10 +101,20 @@ export const InputChatBlock = (props: Props) => {
       );
   });
 
+  const avatarSrc = getAvatarAtIndex({
+    avatarHistory: props.avatarHistory,
+    currentIndex: props.chunkIndex,
+    currentRole: "guest",
+  });
+
   return (
     <Switch>
       <Match when={answer() && !props.hasError}>
-        <GuestBubble answer={answer()} theme={props.theme} />
+        <GuestBubble
+          answer={answer()}
+          theme={props.theme}
+          avatarSrc={avatarSrc}
+        />
       </Match>
       <Match when={isNotDefined(answer()) || props.hasError}>
         <div
@@ -290,6 +305,13 @@ const Input = (props: {
             } as PaymentInputBlock["options"] & RuntimeOptions
           }
           onSuccess={submitPaymentSuccess}
+          onTransitionEnd={props.onTransitionEnd}
+        />
+      </Match>
+      <Match when={props.block.type === InputBlockType.CARDS}>
+        <CardsCaroussel
+          block={props.block as CardsBlock}
+          onSubmit={onSubmit}
           onTransitionEnd={props.onTransitionEnd}
         />
       </Match>

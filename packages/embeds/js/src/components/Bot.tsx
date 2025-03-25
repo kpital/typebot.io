@@ -1,10 +1,10 @@
 import { startChatQuery } from "@/queries/startChatQuery";
-import type { BotContext, OutgoingLog } from "@/types";
+import type { BotContext } from "@/types";
 import { CorsError } from "@/utils/CorsError";
 import { setBotContainerHeight } from "@/utils/botContainerHeightSignal";
 import { setBotContainer } from "@/utils/botContainerSignal";
+import { mergeThemes } from "@/utils/dynamicTheme";
 import { injectFont } from "@/utils/injectFont";
-import { setIsMobile } from "@/utils/isMobileSignal";
 import { persist } from "@/utils/persist";
 import { setCssVariablesValue } from "@/utils/setCssVariablesValue";
 import {
@@ -22,6 +22,7 @@ import type {
   StartFrom,
 } from "@typebot.io/bot-engine/schemas/api";
 import { isDefined, isNotDefined, isNotEmpty } from "@typebot.io/lib/utils";
+import type { LogInSession } from "@typebot.io/logs/schemas";
 import { isTypebotVersionAtLeastV6 } from "@typebot.io/schemas/helpers/isTypebotVersionAtLeastV6";
 import {
   defaultSettings,
@@ -33,6 +34,7 @@ import {
   defaultProgressBarPosition,
 } from "@typebot.io/theme/constants";
 import type { Font } from "@typebot.io/theme/schemas";
+import typebotColors from "@typebot.io/ui/colors.css";
 import clsx from "clsx";
 import { HTTPError } from "ky";
 import { Show, createEffect, createSignal, onCleanup, onMount } from "solid-js";
@@ -51,6 +53,7 @@ export type BotProps = {
   resultId?: string;
   prefilledVariables?: Record<string, unknown>;
   apiHost?: string;
+  wsHost?: string;
   font?: Font;
   progressBarRef?: HTMLDivElement;
   startFrom?: StartFrom;
@@ -59,7 +62,7 @@ export type BotProps = {
   onAnswer?: (answer: { message: string; blockId: string }) => void;
   onInit?: () => void;
   onEnd?: () => void;
-  onNewLogs?: (logs: OutgoingLog[]) => void;
+  onNewLogs?: (logs: LogInSession[]) => void;
   onChatStatePersisted?: (isEnabled: boolean) => void;
   onScriptExecutionSuccess?: (message: string) => void;
 };
@@ -221,6 +224,7 @@ export const Bot = (props: BotProps & { class?: string }) => {
 
   return (
     <>
+      <style>{typebotColors}</style>
       <style>{customCss()}</style>
       <style>{immutableCss}</style>
       <Show when={error()} keyed>
@@ -246,6 +250,7 @@ export const Bot = (props: BotProps & { class?: string }) => {
             }}
             context={{
               apiHost: props.apiHost,
+              wsHost: props.wsHost,
               isPreview:
                 typeof props.typebot !== "string" || (props.isPreview ?? false),
               resultId: initialChatReply.resultId,
@@ -283,7 +288,7 @@ type BotContentProps = {
   onNewInputBlock?: (inputBlock: InputBlock) => void;
   onAnswer?: (answer: { message: string; blockId: string }) => void;
   onEnd?: () => void;
-  onNewLogs?: (logs: OutgoingLog[]) => void;
+  onNewLogs?: (logs: LogInSession[]) => void;
   onScriptExecutionSuccess?: (message: string) => void;
 };
 
@@ -297,14 +302,9 @@ const BotContent = (props: BotContentProps) => {
   );
   let botContainerElement: HTMLDivElement | undefined;
 
-  const resizeObserver = new ResizeObserver((entries) => {
-    return setIsMobile((entries[0]?.target.clientWidth ?? 0) < 432);
-  });
-
   onMount(() => {
     if (!botContainerElement) return;
     setBotContainer(botContainerElement);
-    resizeObserver.observe(botContainerElement);
     setBotContainerHeight(`${botContainerElement.clientHeight}px`);
   });
 
@@ -317,7 +317,10 @@ const BotContent = (props: BotContentProps) => {
     );
     if (!botContainerElement) return;
     setCssVariablesValue({
-      theme: props.initialChatReply.typebot.theme,
+      theme: mergeThemes(
+        props.initialChatReply.typebot.theme,
+        props.initialChatReply.dynamicTheme,
+      ),
       container: botContainerElement,
       isPreview: props.context.isPreview,
       typebotVersion: isTypebotVersionAtLeastV6(
@@ -326,11 +329,6 @@ const BotContent = (props: BotContentProps) => {
         ? props.initialChatReply.typebot.version
         : "6",
     });
-  });
-
-  onCleanup(() => {
-    if (!botContainerElement) return;
-    resizeObserver.unobserve(botContainerElement);
   });
 
   return (

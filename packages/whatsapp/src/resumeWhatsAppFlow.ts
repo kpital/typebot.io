@@ -1,3 +1,4 @@
+import * as Sentry from "@sentry/nextjs";
 import type { Block } from "@typebot.io/blocks-core/schemas/schema";
 import { InputBlockType } from "@typebot.io/blocks-inputs/constants";
 import { continueBotFlow } from "@typebot.io/bot-engine/continueBotFlow";
@@ -14,8 +15,14 @@ import { getBlockById } from "@typebot.io/groups/helpers/getBlockById";
 import redis from "@typebot.io/lib/redis";
 import { uploadFileToBucket } from "@typebot.io/lib/s3/uploadFileToBucket";
 import { isDefined } from "@typebot.io/lib/utils";
+import {
+  type SessionStore,
+  deleteSessionStore,
+  getSessionStore,
+} from "@typebot.io/runtime-session-store";
 import { WhatsAppError } from "./WhatsAppError";
 import { downloadMedia } from "./downloadMedia";
+import { extensionFromMimeType } from "./extensionFromMimeType";
 import type {
   WhatsAppIncomingMessage,
   WhatsAppMessageReferral,
@@ -50,6 +57,7 @@ export const resumeWhatsAppFlow = async ({
   contact,
   callFrom,
 }: Props) => {
+  if (workspaceId) Sentry.setUser({ id: workspaceId });
   if (isMessageTooOld(receivedMessage))
     throw new WhatsAppError("Message is too old", {
       timestamp: receivedMessage.timestamp,
@@ -112,6 +120,7 @@ export const resumeWhatsAppFlow = async ({
     block,
   });
 
+  const sessionStore = getSessionStore(sessionId);
   const {
     input,
     logs,
@@ -124,19 +133,23 @@ export const resumeWhatsAppFlow = async ({
     credentials,
     isSessionExpired,
     reply,
-    session,
-    sessionId,
+    state: session?.state,
+    sessionStore,
     contact,
     workspaceId,
     credentialsId,
   });
+  deleteSessionStore(sessionId);
 
   await saveStateToDatabase({
     clientSideActions: [],
     input,
     logs,
-    session: {
+    sessionId: {
+      type: "existing",
       id: sessionId,
+    },
+    session: {
       isReplying: isWaitingForWebhook,
       state: {
         ...newSessionState,
@@ -182,19 +195,30 @@ const convertWhatsAppMessageToTypebotMessage = async ({
         break;
       }
       case "interactive": {
-        if (text !== "") text += `\n\n${message.interactive.button_reply.id}`;
-        else text = message.interactive.button_reply.id;
+        switch (message.interactive.type) {
+          case "button_reply":
+            if (text !== "")
+              text += `\n\n${message.interactive.button_reply.id}`;
+            else text = message.interactive.button_reply.id;
+            break;
+          case "list_reply":
+            if (text !== "") text += `\n\n${message.interactive.list_reply.id}`;
+            else text = message.interactive.list_reply.id;
+            break;
+        }
         break;
       }
       case "document":
       case "audio":
       case "video":
+      case "sticker":
       case "image": {
         let mediaId: string | undefined;
         if (message.type === "video") mediaId = message.video.id;
         if (message.type === "image") mediaId = message.image.id;
         if (message.type === "audio") mediaId = message.audio.id;
         if (message.type === "document") mediaId = message.document.id;
+        if (message.type === "sticker") mediaId = message.sticker.id;
         if (!mediaId) return;
         const fileVisibility =
           block?.type === InputBlockType.TEXT &&
@@ -218,12 +242,13 @@ const convertWhatsAppMessageToTypebotMessage = async ({
             mediaId,
             systemUserAccessToken: accessToken,
           });
+          const extension = extensionFromMimeType[mimeType];
           const url = await uploadFileToBucket({
             file,
             key:
               resultId && workspaceId && typebotId
-                ? `public/workspaces/${workspaceId}/typebots/${typebotId}/results/${resultId}/${mediaId}`
-                : `tmp/whatsapp/media/${mediaId}`,
+                ? `public/workspaces/${workspaceId}/typebots/${typebotId}/results/${resultId}/${mediaId}${extension ? `.${extension}` : ""}`
+                : `tmp/whatsapp/media/${mediaId}${extension ? `.${extension}` : ""}`,
             mimeType,
           });
           fileUrl = url;
@@ -276,7 +301,6 @@ const getWhatsAppCredentials = async ({
   isPreview,
 }: {
   credentialsId?: string;
-  // TO-DO: Remove workspaceId optionnality when deployed
   workspaceId?: string;
   isPreview: boolean;
 }): Promise<WhatsAppCredentials["data"] | undefined> => {
@@ -292,7 +316,7 @@ const getWhatsAppCredentials = async ({
     };
   }
 
-  if (!credentialsId) return;
+  if (!credentialsId || !workspaceId) return;
 
   const credentials = await getCredentials(credentialsId, workspaceId);
   if (!credentials) return;
@@ -369,8 +393,8 @@ const aggregateParallelMediaMessagesIfRedisEnabled = async ({
 
 const resumeFlowAndSendWhatsAppMessages = async (props: {
   to: string;
-  session: Pick<ChatSession, "state"> | null;
-  sessionId: string;
+  state: SessionState | undefined;
+  sessionStore: SessionStore;
   reply: Message | undefined;
   contact?: NonNullable<SessionState["whatsApp"]>["contact"];
   referral?: WhatsAppMessageReferral;
@@ -391,7 +415,7 @@ const resumeFlowAndSendWhatsAppMessages = async (props: {
     newSessionState,
   } = resumeResponse;
 
-  const isFirstChatChunk = (!props.session || props.isSessionExpired) ?? false;
+  const isFirstChatChunk = (!props.state || props.isSessionExpired) ?? false;
   const result = await sendChatReplyToWhatsApp({
     to: props.to,
     messages,
@@ -399,11 +423,12 @@ const resumeFlowAndSendWhatsAppMessages = async (props: {
     isFirstChatChunk,
     clientSideActions,
     credentials: props.credentials,
-    state: resumeResponse.newSessionState,
+    state: newSessionState,
   });
   if (result?.type === "replyToSend")
     return resumeFlowAndSendWhatsAppMessages({
       ...props,
+      state: newSessionState,
       reply: result.replyToSend
         ? {
             type: "text",
@@ -423,7 +448,7 @@ const resumeFlowAndSendWhatsAppMessages = async (props: {
 };
 
 const resumeFlow = ({
-  session,
+  state,
   isSessionExpired,
   reply,
   contact,
@@ -431,22 +456,25 @@ const resumeFlow = ({
   credentials,
   credentialsId,
   workspaceId,
+  sessionStore,
 }: {
   reply: Message | undefined;
   contact?: NonNullable<SessionState["whatsApp"]>["contact"];
   referral?: WhatsAppMessageReferral;
-  session: Pick<ChatSession, "state"> | null;
+  state: SessionState | undefined;
   credentials: WhatsAppCredentials["data"];
   isSessionExpired: boolean | null;
   credentialsId?: string;
   workspaceId?: string;
+  sessionStore: SessionStore;
 }) => {
-  if (session?.state && !isSessionExpired)
+  if (state && !isSessionExpired)
     return continueBotFlow(reply, {
       version: 2,
+      sessionStore,
       state: contact
         ? {
-            ...session.state,
+            ...state,
             whatsApp: {
               contact,
               referral: referral
@@ -457,7 +485,7 @@ const resumeFlow = ({
                 : undefined,
             },
           }
-        : session.state,
+        : state,
       textBubbleContentFormat: "richText",
     });
   if (!workspaceId || !contact)
@@ -470,5 +498,6 @@ const resumeFlow = ({
     credentials: { ...credentials, id: credentialsId as string },
     contact,
     referral,
+    sessionStore,
   });
 };
