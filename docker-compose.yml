@@ -60,4 +60,4 @@ services:
 
 volumes:
   db-data:
-  s3_data:
+  s3-data:
