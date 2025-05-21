@@ -36,6 +36,7 @@ services:
   minio:
     image: minio/minio
     command: server /data --console-address ":9001"
+    restart: always
     ports:
       - '9000:9000'
       - '9001:9001'
@@ -58,6 +59,7 @@ services:
       /usr/bin/mc anonymous set public minio/typebot/public;
       exit 0;
       "
+    restart: always
 
 volumes:
   db-data:
