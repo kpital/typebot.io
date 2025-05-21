@@ -19,6 +19,7 @@ services:
     restart: always
     depends_on:
       - typebot-db
+      - minio
     ports:
       - '8080:3000'
     extra_hosts:
